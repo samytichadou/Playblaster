@@ -18,15 +18,15 @@ Created by Samy Tichadou (tonton)
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-bl_info = {  
- "name": "Playblaster",  
- "author": "Samy Tichadou (tonton)",  
- "version": (1, 0),  
- "blender": (2, 80, 0),  
- "location": "Properties > Font > Font selection",  
- "description": "Quick Playblast of your Animation",  
-  "wiki_url": "https://github.com/samytichadou/FontSelector_blender_addon/wiki",  
- "tracker_url": "https://github.com/samytichadou/FontSelector_blender_addon/issues/new",  
+bl_info = {
+ "name": "Playblaster",
+ "author": "Samy Tichadou (tonton)",
+ "version": (1, 0),
+ "blender": (2, 80, 0),
+ "location": "Properties > Font > Font selection",
+ "description": "Quick Playblast of your Animation",
+  "wiki_url": "https://github.com/samytichadou/FontSelector_blender_addon/wiki",
+ "tracker_url": "https://github.com/samytichadou/FontSelector_blender_addon/issues/new",
  "category": "Animation"}
 
 
@@ -61,15 +61,21 @@ def register():
 
     bpy.types.Scene.playblaster_render_engine = \
         bpy.props.EnumProperty(
-                        name = "Render Engine", 
-                        default = 'BLENDER_WORKBENCH',
+                        name = "Render Engine",
+                        default = 'BLENDER_EEVEE',
                         items = (
                         ('BLENDER_WORKBENCH', "Workbench Engine", ""),
                         ('BLENDER_EEVEE', "EEVEE", ""),
                         ))
 
+    bpy.types.Scene.playblaster_is_rendering = \
+        bpy.props.BoolProperty()
+
+    bpy.types.Scene.playblaster_completion = \
+        bpy.props.IntProperty(min = 0, max = 100)
+
 def unregister():
-    
+
     ### OPERATORS ###
 
     from bpy.utils import unregister_class
@@ -79,3 +85,5 @@ def unregister():
     ### PROPS ###
 
     del bpy.types.Scene.playblaster_render_engine
+    del bpy.types.Scene.playblaster_is_rendering
+    del bpy.types.Scene.playblaster_completion
