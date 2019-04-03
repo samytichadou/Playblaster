@@ -7,10 +7,10 @@ from .misc_functions import absolute_path, create_dir, get_file_in_folder, delet
 from .global_variables import blender_executable
 from .thread_functions import threading_render
 
-class RenderOperator(bpy.types.Operator):
+class PlayblasterRenderOperator(bpy.types.Operator):
     """Tooltip"""
-    bl_idname = "playblaster.simple_render"
-    bl_label = "Playblaster Simple Render"
+    bl_idname = "playblaster.render"
+    bl_label = "Playblaster Render"
 
     @classmethod
     def poll(cls, context):
@@ -37,14 +37,13 @@ class RenderOperator(bpy.types.Operator):
         scn.playblaster_is_rendering = True
         scn.playblaster_completion = 0
 
+        # create dir if does not exist
+        create_dir(folder_path)
+
         # delete old playblast
         to_delete = get_file_in_folder(folder_path, output_name)
         if to_delete != "" :
             delete_file(to_delete)
-
-        # create dir if does not exist
-        create_dir(folder_path)
-
 
         rd = scn.render
         ffmpeg = rd.ffmpeg
@@ -63,7 +62,7 @@ class RenderOperator(bpy.types.Operator):
         ### change settings ###
         rd.filepath = output_filepath
         rd.image_settings.file_format = 'FFMPEG'
-        rd.resolution_percentage = 50
+        rd.resolution_percentage = scn.playblaster_resolution_percentage
         ffmpeg.format = 'MPEG4'
         ffmpeg.codec = 'H264'
         ffmpeg.constant_rate_factor = 'HIGH'

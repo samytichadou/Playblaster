@@ -36,17 +36,19 @@ import bpy
 # IMPORT SPECIFICS
 ##################################
 
-from .render_operator import RenderOperator
+from .render_operator import PlayblasterRenderOperator
 from .preferences import PlayblasterAddonPrefs
 from .modal_check import PlayblasterModalCheck
+from .set_preferences_operator import PlayblasterSetPreferences
 
 
 # register
 ##################################
 
-classes = (RenderOperator,
+classes = (PlayblasterRenderOperator,
             PlayblasterAddonPrefs,
-            PlayblasterModalCheck
+            PlayblasterModalCheck,
+            PlayblasterSetPreferences
             )
 
 def register():
@@ -62,11 +64,15 @@ def register():
     bpy.types.Scene.playblaster_render_engine = \
         bpy.props.EnumProperty(
                         name = "Render Engine",
-                        default = 'BLENDER_EEVEE',
+                        default = 'BLENDER_WORKBENCH',
                         items = (
                         ('BLENDER_WORKBENCH', "Workbench Engine", ""),
                         ('BLENDER_EEVEE', "EEVEE", ""),
                         ))
+
+    bpy.types.Scene.playblaster_resolution_percentage = \
+        bpy.props.IntProperty(default = 50, min = 1, max = 100)
+
 
     bpy.types.Scene.playblaster_is_rendering = \
         bpy.props.BoolProperty()
@@ -85,5 +91,7 @@ def unregister():
     ### PROPS ###
 
     del bpy.types.Scene.playblaster_render_engine
+    del bpy.types.Scene.playblaster_resolution_percentage
+
     del bpy.types.Scene.playblaster_is_rendering
     del bpy.types.Scene.playblaster_completion
