@@ -71,7 +71,7 @@ def register():
                         ))
 
     bpy.types.Scene.playblaster_resolution_percentage = \
-        bpy.props.IntProperty(default = 50, min = 1, max = 100)
+        bpy.props.IntProperty(name = "Resolution Percentage", default = 50, min = 1, max = 100)
 
 
     bpy.types.Scene.playblaster_is_rendering = \

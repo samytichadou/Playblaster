@@ -17,7 +17,7 @@ class PlayblasterSetPreferences(bpy.types.Operator):
         # render engine
         layout.prop(scn, 'playblaster_render_engine')
         # resolution percentage
-        layout.prop(scn, 'playblaster_resolution_percentage')
+        layout.prop(scn, 'playblaster_resolution_percentage', slider = True)
 
         
         
