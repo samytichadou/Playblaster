@@ -73,6 +73,15 @@ def register():
     bpy.types.Scene.playblaster_resolution_percentage = \
         bpy.props.IntProperty(name = "Resolution Percentage", default = 50, min = 1, max = 100)
 
+    bpy.types.Scene.playblaster_use_compositing = \
+        bpy.props.BoolProperty(name = "Compositing", default = False)
+
+    bpy.types.Scene.playblaster_eevee_samples = \
+        bpy.props.IntProperty(name = "EEVEE Samples", default = 16, min = 4, max = 128)
+
+    bpy.types.Scene.playblaster_eevee_dof = \
+        bpy.props.BoolProperty(name = "EEVEE DoF", default = False)
+
 
     bpy.types.Scene.playblaster_is_rendering = \
         bpy.props.BoolProperty()
@@ -92,6 +101,9 @@ def unregister():
 
     del bpy.types.Scene.playblaster_render_engine
     del bpy.types.Scene.playblaster_resolution_percentage
+    del bpy.types.Scene.playblaster_use_compositing
+    del bpy.types.Scene.playblaster_eevee_samples
+    del bpy.types.Scene.playblaster_eevee_dof
 
     del bpy.types.Scene.playblaster_is_rendering
     del bpy.types.Scene.playblaster_completion

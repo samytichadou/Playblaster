@@ -65,9 +65,16 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         old_gopsize = ffmpeg.gopsize
         old_codec = ffmpeg.codec
         old_audio_codec = ffmpeg.audio_codec
+            # postprod
+        old_compositing = rd.use_compositing
+        old_sequencer = rd.use_sequencer
             # simplify
         old_simplify_toggle = rd.use_simplify
         old_simplify_subdiv_render = rd.simplify_subdivision_render
+            # EEVEE
+        if render_engine == "BLENDER_EEVEE" :
+            old_render_samples = scn.eevee.taa_render_samples
+            old_eevee_dof = scn.eevee.use_dof
 
         ### change settings ###
         rd.filepath = output_filepath
@@ -79,9 +86,16 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         ffmpeg.ffmpeg_preset = 'REALTIME'
         ffmpeg.gopsize = 10
         ffmpeg.audio_codec = 'AAC'
+            # postprod
+        rd.use_compositing = scn.playblaster_use_compositing
+        rd.use_sequencer = False
             # simplify
         rd.use_simplify = True
         rd.simplify_subdivision_render = 0
+            # EEVEE
+        if render_engine == "BLENDER_EEVEE" :
+            scn.eevee.taa_render_samples = scn.playblaster_eevee_samples
+            scn.eevee.use_dof = scn.playblaster_eevee_dof
 
         # save current file
         bpy.ops.wm.save_as_mainfile(filepath = blend_filepath)
@@ -99,9 +113,16 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         ffmpeg.gopsize = old_gopsize
         ffmpeg.codec = old_codec
         ffmpeg.audio_codec = old_audio_codec
+            # postprod
+        rd.use_compositing = old_compositing
+        rd.use_sequencer = old_sequencer
             # simplify
         rd.use_simplify = old_simplify_toggle
         rd.simplify_subdivision_render = old_simplify_subdiv_render
+            # EEVEE
+        if render_engine == "BLENDER_EEVEE" :
+            scn.eevee.taa_render_samples = old_render_samples
+            scn.eevee.use_dof = old_eevee_dof
 
 
         # save current file
