@@ -1,6 +1,4 @@
-import bpy
-import os
-import signal
+import bpy, os, signal, subprocess, platform
 
 # absolute path
 def absolute_path(path) :
@@ -13,9 +11,8 @@ def create_dir(dir_path) :
             os.makedirs(dir_path)
 
 #kill subprocess
-def kill_subprocess(process):
-    if process !='':
-        os.kill(int(process), signal.SIGTERM)
+def kill_subprocess(pid):
+    os.kill(pid, signal.SIGTERM)
 
 #delete filepath
 def delete_file(filepath) :
@@ -29,3 +26,12 @@ def get_file_in_folder(folder, pattern) :
         if pattern in file :
             file_path = os.path.join(folder, file)
     return file_path
+
+#open filepath with default
+def open_video_file(file_path) :
+    if platform.system() == 'Darwin':       # macOS
+        subprocess.call(('open', file_path))
+    elif platform.system() == 'Windows':    # Windows
+        os.startfile(file_path)
+    else:                                   # linux variants
+        subprocess.call(('xdg-open', file_path))

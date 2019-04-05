@@ -64,7 +64,7 @@ def register():
     bpy.types.Scene.playblaster_render_engine = \
         bpy.props.EnumProperty(
                         name = "Engine",
-                        default = 'BLENDER_WORKBENCH',
+                        default = 'BLENDER_EEVEE',
                         items = (
                         ('BLENDER_WORKBENCH', "Workbench", ""),
                         ('BLENDER_EEVEE', "EEVEE", ""),

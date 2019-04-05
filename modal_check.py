@@ -4,6 +4,7 @@ from gpu_extras.batch import batch_for_shader
 
 from .preferences import get_addon_preferences
 from .global_variables import modal_refreshing
+from .misc_functions import delete_file, open_video_file, get_file_in_folder
 
 ### UI ###
 
@@ -84,7 +85,12 @@ class PlayblasterModalCheck(bpy.types.Operator):
         #    self.cancel(context)
         #    return {'CANCELLED'}
 
-        if event.type == 'TIMER' :
+        # handle cancelling
+        if event.type in {'ESC'} :
+            self.cancel(context)
+            return {'CANCELLED'}
+
+        elif event.type == 'TIMER' :
             if completion == 100 :
                 self.finish(context)
                 return {'FINISHED'}
@@ -104,11 +110,53 @@ class PlayblasterModalCheck(bpy.types.Operator):
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
 
+        # turn off is_rendering
+        context.scene.playblaster_is_rendering = False
+
+        # get variables
+        from .render_operator import blend_temp, video_temp
+        global blend_temp
+        global video_temp
+
+        # debug
+        #print(blend_temp)
+        #print(video_temp)
+
+        # delete temp file
+        delete_file(blend_temp)
+        blend_temp = ""
+
+        # delete temp video
+        vidfile = get_file_in_folder(os.path.dirname(video_temp), os.path.basename(video_temp))
+        delete_file(vidfile)
+        video_temp = ""
+
         self.report({'INFO'}, "Render Canceled")
 
     def finish(self, context):
         bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
+
+        # turn off is_rendering
+        context.scene.playblaster_is_rendering = False
+
+        # get variables
+        from .render_operator import blend_temp, video_temp
+        global blend_temp
+        global video_temp
+
+        # debug
+        #print(blend_temp)
+        #print(video_temp)
+
+        # delete temp file
+        delete_file(blend_temp)
+        blend_temp = ""
+
+        # open video file
+        vidfile = get_file_in_folder(os.path.dirname(video_temp), os.path.basename(video_temp))
+        open_video_file(vidfile)
+        video_temp = ""
 
         self.report({'INFO'}, "Render Finished")

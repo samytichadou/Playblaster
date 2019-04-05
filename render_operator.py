@@ -7,6 +7,9 @@ from .misc_functions import absolute_path, create_dir, get_file_in_folder, delet
 from .global_variables import blender_executable
 from .thread_functions import threading_render
 
+blend_temp = ""
+video_temp = ""
+
 class PlayblasterRenderOperator(bpy.types.Operator):
     """Tooltip"""
     bl_idname = "playblaster.render"
@@ -17,6 +20,10 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         return bpy.data.is_saved
 
     def execute(self, context):
+        # global
+        global blend_temp
+        global video_temp
+
         # variables
         prefs = get_addon_preferences()
         folder_path = absolute_path(prefs.prefs_folderpath)
@@ -27,9 +34,9 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         blend_dir = os.path.dirname(blend_filepath)
         blend_file = bpy.path.basename(blend_filepath)
         blend_name = os.path.splitext(blend_file)[0]
-        new_blend_filepath = os.path.join(blend_dir, "temp_" + blend_file)
+        new_blend_filepath = blend_temp = os.path.join(blend_dir, "temp_" + blend_file)
         output_name = "playblast_" + blend_name + "_" + scn.name + "_"
-        output_filepath = os.path.join(folder_path, output_name)
+        output_filepath = video_temp = os.path.join(folder_path, output_name)
         render_engine = scn.playblaster_render_engine
 
         total_frame = context.scene.frame_end - context.scene.frame_start + 1
@@ -58,6 +65,9 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         old_gopsize = ffmpeg.gopsize
         old_codec = ffmpeg.codec
         old_audio_codec = ffmpeg.audio_codec
+            # simplify
+        old_simplify_toggle = rd.use_simplify
+        old_simplify_subdiv_render = rd.simplify_subdivision_render
 
         ### change settings ###
         rd.filepath = output_filepath
@@ -69,6 +79,9 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         ffmpeg.ffmpeg_preset = 'REALTIME'
         ffmpeg.gopsize = 10
         ffmpeg.audio_codec = 'AAC'
+            # simplify
+        rd.use_simplify = True
+        rd.simplify_subdivision_render = 0
 
         # save current file
         bpy.ops.wm.save_as_mainfile(filepath = blend_filepath)
@@ -86,6 +99,10 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         ffmpeg.gopsize = old_gopsize
         ffmpeg.codec = old_codec
         ffmpeg.audio_codec = old_audio_codec
+            # simplify
+        rd.use_simplify = old_simplify_toggle
+        rd.simplify_subdivision_render = old_simplify_subdiv_render
+
 
         # save current file
         bpy.ops.wm.save_as_mainfile(filepath = blend_filepath)
