@@ -1,8 +1,9 @@
 import bpy
 
 class PlayblasterSetPreferences(bpy.types.Operator):
+    """Set Playblaster scene settings"""
     bl_idname = "playblaster.set_preferences"
-    bl_label = "Playblaster Preferences"
+    bl_label = "Playblaster Settings"
 
     def execute(self, context):
         return {'FINISHED'}
@@ -14,14 +15,45 @@ class PlayblasterSetPreferences(bpy.types.Operator):
         scn = context.scene
         layout = self.layout
 
-        # render engine
-        layout.prop(scn, 'playblaster_render_engine')
         # resolution percentage
         layout.prop(scn, 'playblaster_resolution_percentage', slider = True)
         # Compositing
         layout.prop(scn, 'playblaster_use_compositing')
+        # Simplify
+        
+        layout.separator()
 
+        box = layout.box()
+        # render engine
+        box.label(text = "Playblast Engine")
+        box.prop(scn, 'playblaster_render_engine', text = "")
+
+        # EEVEE
         if scn.playblaster_render_engine == "BLENDER_EEVEE" :
             # eevee settings
-            layout.prop(scn, 'playblaster_eevee_samples')
-            layout.prop(scn, 'playblaster_eevee_dof')
+            box.prop(scn, 'playblaster_eevee_samples')
+            box.prop(scn, 'playblaster_eevee_dof')
+            # shadow cube size
+            # shadow cascade size
+            # AO
+            # Motion blur
+            # volumetric
+            # overscan
+
+        # workbench
+        elif scn.playblaster_render_engine == "BLENDER_WORKBENCH" :
+            pass
+            # lighting type
+            # color type
+            # backface
+            # xray
+            # shadow
+            # cavity
+            # dof
+            # outline
+            # specular
+
+        
+        layout.separator()
+
+        layout.operator("playblaster.render")

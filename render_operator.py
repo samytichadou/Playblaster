@@ -11,7 +11,7 @@ blend_temp = ""
 video_temp = ""
 
 class PlayblasterRenderOperator(bpy.types.Operator):
-    """Tooltip"""
+    """Create Playblast of current scene"""
     bl_idname = "playblaster.render"
     bl_label = "Playblaster Render"
 
