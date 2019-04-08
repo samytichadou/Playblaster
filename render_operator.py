@@ -109,7 +109,8 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         rd.resolution_percentage = old_res_pct
         ffmpeg.format = old_format
         ffmpeg.constant_rate_factor = old_rate_factor
-        ffmpeg.ffmpeg_preset = old_ffmpeg_preset
+        if old_ffmpeg_preset != "" :
+            ffmpeg.ffmpeg_preset = old_ffmpeg_preset
         ffmpeg.gopsize = old_gopsize
         ffmpeg.codec = old_codec
         ffmpeg.audio_codec = old_audio_codec
