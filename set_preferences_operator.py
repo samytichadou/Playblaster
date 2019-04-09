@@ -20,7 +20,13 @@ class PlayblasterSetPreferences(bpy.types.Operator):
         # Compositing
         layout.prop(scn, 'playblaster_use_compositing')
         # Simplify
-        
+        # Frame range override
+        layout.prop(scn, 'playblaster_frame_range_override')
+        if scn.playblaster_frame_range_override :
+            col = layout.column(align = True)
+            col.prop(scn, 'playblaster_frame_range_in')
+            col.prop(scn, 'playblaster_frame_range_out')
+
         layout.separator()
 
         box = layout.box()
@@ -53,7 +59,9 @@ class PlayblasterSetPreferences(bpy.types.Operator):
             # outline
             # specular
 
-        
+
         layout.separator()
 
-        layout.operator("playblaster.render")
+        layout.operator("playblaster.render", icon = 'RENDER_ANIMATION')
+        #layout.prop(context.scene, "playblaster_previous_render")
+        layout.operator("playblaster.play_rendered", icon = 'PLAY')

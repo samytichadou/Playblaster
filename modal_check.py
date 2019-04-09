@@ -153,10 +153,12 @@ class PlayblasterModalCheck(bpy.types.Operator):
         # delete temp file
         delete_file(blend_temp)
         blend_temp = ""
+        context.scene.playblaster_previous_render = ""
 
         # open video file
         vidfile = get_file_in_folder(os.path.dirname(video_temp), os.path.basename(video_temp))
         open_video_file(vidfile)
         video_temp = ""
+        context.scene.playblaster_previous_render = vidfile
 
         self.report({'INFO'}, "Render Finished")

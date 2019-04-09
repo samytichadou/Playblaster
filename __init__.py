@@ -40,6 +40,7 @@ from .render_operator import PlayblasterRenderOperator
 from .preferences import PlayblasterAddonPrefs
 from .modal_check import PlayblasterModalCheck
 from .set_preferences_operator import PlayblasterSetPreferences
+from .play_rendered_operator import PlayblasterPlayRendered
 
 
 # register
@@ -48,7 +49,8 @@ from .set_preferences_operator import PlayblasterSetPreferences
 classes = (PlayblasterRenderOperator,
             PlayblasterAddonPrefs,
             PlayblasterModalCheck,
-            PlayblasterSetPreferences
+            PlayblasterSetPreferences,
+            PlayblasterPlayRendered
             )
 
 def register():
@@ -73,6 +75,15 @@ def register():
     bpy.types.Scene.playblaster_resolution_percentage = \
         bpy.props.IntProperty(name = "Resolution Percentage", default = 50, min = 1, max = 100)
 
+    bpy.types.Scene.playblaster_frame_range_override = \
+        bpy.props.BoolProperty(name = "Frame Range Override", default = False)
+
+    bpy.types.Scene.playblaster_frame_range_in = \
+        bpy.props.IntProperty(name = "Start Frame", min = 0, default = 1)
+
+    bpy.types.Scene.playblaster_frame_range_out = \
+        bpy.props.IntProperty(name = "End Frame", min = 1, default = 100)
+
     bpy.types.Scene.playblaster_use_compositing = \
         bpy.props.BoolProperty(name = "Compositing", default = False)
 
@@ -89,6 +100,9 @@ def register():
     bpy.types.Scene.playblaster_completion = \
         bpy.props.IntProperty(min = 0, max = 100)
 
+    bpy.types.Scene.playblaster_previous_render = \
+        bpy.props.StringProperty()
+
 def unregister():
 
     ### OPERATORS ###
@@ -100,6 +114,9 @@ def unregister():
     ### PROPS ###
 
     del bpy.types.Scene.playblaster_render_engine
+    del bpy.types.Scene.playblaster_frame_range_override
+    del bpy.types.Scene.playblaster_frame_range_in
+    del bpy.types.Scene.playblaster_frame_range_out
     del bpy.types.Scene.playblaster_resolution_percentage
     del bpy.types.Scene.playblaster_use_compositing
     del bpy.types.Scene.playblaster_eevee_samples
@@ -107,3 +124,4 @@ def unregister():
 
     del bpy.types.Scene.playblaster_is_rendering
     del bpy.types.Scene.playblaster_completion
+    del bpy.types.Scene.playblaster_previous_render

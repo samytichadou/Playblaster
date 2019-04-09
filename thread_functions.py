@@ -18,7 +18,13 @@ def render_function(cmd, total_frame, scene, folder_path, output_name, blend_fil
         if line != '' :
             if b"Append frame " in line :
                 frame_count += 1
-                scene.playblaster_completion = frame_count / total_frame * 100
+                try :
+                    scene.playblaster_completion = frame_count / total_frame * 100
+                except AttributeError :
+                    #debug
+                    #print("AttributeError avoided")
+                    pass
+
             if b"Blender quit" in line :
                 break
         else:
