@@ -88,7 +88,7 @@ def register():
         bpy.props.BoolProperty(name = "Compositing", default = False)
 
     bpy.types.Scene.playblaster_eevee_samples = \
-        bpy.props.IntProperty(name = "EEVEE Samples", default = 16, min = 4, max = 128)
+        bpy.props.IntProperty(name = "EEVEE Samples", default = 8, min = 4, max = 128)
 
     bpy.types.Scene.playblaster_eevee_dof = \
         bpy.props.BoolProperty(name = "EEVEE DoF", default = False)
