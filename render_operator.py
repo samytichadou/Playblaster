@@ -73,6 +73,8 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         if render_engine == "BLENDER_EEVEE" :
             old_render_samples = scn.eevee.taa_render_samples
             old_eevee_dof = scn.eevee.use_dof
+            old_eevee_ao = scn.eevee.use_gtao
+
             # frame range
         if scn.playblaster_frame_range_override and scn.playblaster_frame_range_in < scn.playblaster_frame_range_out :
             old_range_in = scn.frame_start
@@ -98,6 +100,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         if render_engine == "BLENDER_EEVEE" :
             scn.eevee.taa_render_samples = scn.playblaster_eevee_samples
             scn.eevee.use_dof = scn.playblaster_eevee_dof
+            scn.eevee.use_gtao = scn.playblaster_eevee_ambient_occlusion
             # frame range
         if scn.playblaster_frame_range_override and scn.playblaster_frame_range_in < scn.playblaster_frame_range_out :
             scn.frame_start = scn.playblaster_frame_range_in
@@ -133,6 +136,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         if render_engine == "BLENDER_EEVEE" :
             scn.eevee.taa_render_samples = old_render_samples
             scn.eevee.use_dof = old_eevee_dof
+            scn.eevee.use_gtao = old_eevee_ao
             # frame range
         if scn.playblaster_frame_range_override and scn.playblaster_frame_range_in < scn.playblaster_frame_range_out :
             scn.frame_start = old_range_in

@@ -93,6 +93,9 @@ def register():
     bpy.types.Scene.playblaster_eevee_dof = \
         bpy.props.BoolProperty(name = "EEVEE DoF", default = False)
 
+    bpy.types.Scene.playblaster_eevee_ambient_occlusion = \
+        bpy.props.BoolProperty(name = "EEVEE AO", default = False)
+
 
     bpy.types.Scene.playblaster_is_rendering = \
         bpy.props.BoolProperty()
@@ -121,6 +124,7 @@ def unregister():
     del bpy.types.Scene.playblaster_use_compositing
     del bpy.types.Scene.playblaster_eevee_samples
     del bpy.types.Scene.playblaster_eevee_dof
+    del bpy.types.Scene.playblaster_eevee_ambient_occlusion
 
     del bpy.types.Scene.playblaster_is_rendering
     del bpy.types.Scene.playblaster_completion
