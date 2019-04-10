@@ -17,7 +17,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return bpy.data.is_saved
+        return bpy.data.is_saved and not context.scene.playblaster_is_rendering
 
     def execute(self, context):
         # global
