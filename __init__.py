@@ -23,10 +23,10 @@ bl_info = {
  "author": "Samy Tichadou (tonton)",
  "version": (1, 0),
  "blender": (2, 80, 0),
- "location": "Properties > Font > Font selection",
+ "location": "Search Menu",
  "description": "Quick Playblast of your Animation",
-  "wiki_url": "https://github.com/samytichadou/FontSelector_blender_addon/wiki",
- "tracker_url": "https://github.com/samytichadou/FontSelector_blender_addon/issues/new",
+ #"wiki_url": "https://github.com/samytichadou/FontSelector_blender_addon/wiki",
+ "tracker_url": "https://github.com/samytichadou/Playblaster/issues/new",
  "category": "Animation"}
 
 
