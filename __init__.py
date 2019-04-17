@@ -25,7 +25,7 @@ bl_info = {
  "blender": (2, 80, 0),
  "location": "Search Menu",
  "description": "Quick Playblast of your Animation",
- #"wiki_url": "https://github.com/samytichadou/FontSelector_blender_addon/wiki",
+ "wiki_url": "https://github.com/samytichadou/Playblaster/wiki",
  "tracker_url": "https://github.com/samytichadou/Playblaster/issues/new",
  "category": "Animation"}
 
