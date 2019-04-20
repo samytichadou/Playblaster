@@ -106,6 +106,7 @@ def register():
         bpy.props.FloatProperty(name = "Max Child Particles", default = 0, min = 0, max = 1)
 
 
+
     bpy.types.Scene.playblaster_is_rendering = \
         bpy.props.BoolProperty()
 
@@ -114,6 +115,9 @@ def register():
 
     bpy.types.Scene.playblaster_previous_render = \
         bpy.props.StringProperty()
+
+    bpy.types.Scene.playblaster_debug = \
+        bpy.props.BoolProperty(name = "Debug")
 
 def unregister():
 
@@ -141,3 +145,4 @@ def unregister():
     del bpy.types.Scene.playblaster_is_rendering
     del bpy.types.Scene.playblaster_completion
     del bpy.types.Scene.playblaster_previous_render
+    del bpy.types.Scene.playblaster_debug

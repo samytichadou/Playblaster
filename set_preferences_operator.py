@@ -15,6 +15,12 @@ class PlayblasterSetPreferences(bpy.types.Operator):
         scn = context.scene
         layout = self.layout
 
+        # debug
+        box = layout.box()
+        box.prop(scn, 'playblaster_debug')
+        if scn.playblaster_debug :
+            box.prop(scn, 'playblaster_is_rendering')
+
         # resolution percentage
         layout.prop(scn, 'playblaster_resolution_percentage', slider = True)
         # Compositing

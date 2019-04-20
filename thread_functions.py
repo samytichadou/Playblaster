@@ -6,7 +6,9 @@ from .misc_functions import absolute_path, create_dir, delete_file, get_file_in_
 # render function
 def render_function(cmd, total_frame, scene, folder_path, output_name, blend_file) :
     global pid
+    debug = bpy.context.scene.playblaster_debug
     # launch rendering
+    if debug : print(cmd)
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     frame_count = 0
@@ -16,13 +18,15 @@ def render_function(cmd, total_frame, scene, folder_path, output_name, blend_fil
             break
         line = process.stdout.readline()
         if line != '' :
+            #debug
+            if debug : print(line)
             if b"Append frame " in line :
                 frame_count += 1
                 try :
                     scene.playblaster_completion = frame_count / total_frame * 100
                 except AttributeError :
                     #debug
-                    #print("AttributeError avoided")
+                    if debug : print("AttributeError avoided")
                     pass
 
             if b"Blender quit" in line :
