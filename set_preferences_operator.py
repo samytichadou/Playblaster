@@ -20,6 +20,11 @@ class PlayblasterSetPreferences(bpy.types.Operator):
         # Compositing
         layout.prop(scn, 'playblaster_use_compositing')
         # Simplify
+        layout.prop(scn, 'playblaster_simplify')
+        if scn.playblaster_simplify :
+            col = layout.column(align = True)
+            col.prop(scn, 'playblaster_simplify_subdivision')
+            col.prop(scn, 'playblaster_simplify_particles')
         # Frame range override
         layout.prop(scn, 'playblaster_frame_range_override')
         if scn.playblaster_frame_range_override :

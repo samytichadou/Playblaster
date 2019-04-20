@@ -67,8 +67,10 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         old_compositing = rd.use_compositing
         old_sequencer = rd.use_sequencer
             # simplify
-        old_simplify_toggle = rd.use_simplify
-        old_simplify_subdiv_render = rd.simplify_subdivision_render
+        if scn.playblaster_simplify :
+            old_simplify_toggle = rd.use_simplify
+            old_simplify_subdiv_render = rd.simplify_subdivision_render
+            old_simplify_particles = rd.simplify_child_particles_render
             # EEVEE
         if render_engine == "BLENDER_EEVEE" :
             old_render_samples = scn.eevee.taa_render_samples
@@ -94,8 +96,10 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         rd.use_compositing = scn.playblaster_use_compositing
         rd.use_sequencer = False
             # simplify
-        rd.use_simplify = True
-        rd.simplify_subdivision_render = 0
+        if scn.playblaster_simplify :
+            rd.use_simplify = True
+            rd.simplify_subdivision_render = scn.playblaster_simplify_subdivision
+            rd.simplify_child_particles_render = scn.playblaster_simplify_particles
             # EEVEE
         if render_engine == "BLENDER_EEVEE" :
             scn.eevee.taa_render_samples = scn.playblaster_eevee_samples
@@ -130,8 +134,10 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         rd.use_compositing = old_compositing
         rd.use_sequencer = old_sequencer
             # simplify
-        rd.use_simplify = old_simplify_toggle
-        rd.simplify_subdivision_render = old_simplify_subdiv_render
+        if scn.playblaster_simplify :
+            rd.use_simplify = old_simplify_toggle
+            rd.simplify_subdivision_render = old_simplify_subdiv_render
+            rd.simplify_child_particles_render = old_simplify_particles
             # EEVEE
         if render_engine == "BLENDER_EEVEE" :
             scn.eevee.taa_render_samples = old_render_samples
