@@ -5,7 +5,6 @@ from .misc_functions import absolute_path, create_dir, delete_file, get_file_in_
 
 # render function
 def render_function(cmd, total_frame, scene, folder_path, output_name, blend_file) :
-    global pid
     debug = bpy.context.scene.playblaster_debug
     # launch rendering
     if debug : print(cmd)
