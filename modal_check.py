@@ -81,10 +81,6 @@ class PlayblasterModalCheck(bpy.types.Operator):
         except AttributeError:
             pass
 
-        #if event.type in {'ESC'} :
-        #    self.cancel(context)
-        #    return {'CANCELLED'}
-
         # handle cancelling
         if event.type in {'ESC'} :
             self.cancel(context)
@@ -110,6 +106,8 @@ class PlayblasterModalCheck(bpy.types.Operator):
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
 
+        debug = context.scene.playblaster_debug
+
         # turn off is_rendering
         context.scene.playblaster_is_rendering = False
 
@@ -119,8 +117,9 @@ class PlayblasterModalCheck(bpy.types.Operator):
         global video_temp
 
         # debug
-        #print(blend_temp)
-        #print(video_temp)
+        if debug :
+            print("blend temp : " + blend_temp)
+            print("video temp : " + video_temp)
 
         # delete temp file
         delete_file(blend_temp)
@@ -138,6 +137,8 @@ class PlayblasterModalCheck(bpy.types.Operator):
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
 
+        debug = context.scene.playblaster_debug
+
         # turn off is_rendering
         context.scene.playblaster_is_rendering = False
 
@@ -147,8 +148,9 @@ class PlayblasterModalCheck(bpy.types.Operator):
         global video_temp
 
         # debug
-        #print(blend_temp)
-        #print(video_temp)
+        if debug :
+            print("blend temp : " + blend_temp)
+            print("video temp : " + video_temp)
 
         # delete temp file
         delete_file(blend_temp)
