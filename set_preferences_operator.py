@@ -94,7 +94,7 @@ class PlayblasterSetPreferences(bpy.types.Operator):
             if scn.playblaster_render_engine == "BLENDER_EEVEE" :
                 # eevee settings
                 box.prop(scn, 'playblaster_eevee_samples')
-                box.prop(scn, 'playblaster_eevee_dof')
+                # box.prop(scn, 'playblaster_eevee_dof')
                 # shadow cube size
                 # shadow cascade size
                 # AO

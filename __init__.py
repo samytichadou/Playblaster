@@ -90,8 +90,8 @@ def register():
     bpy.types.Scene.playblaster_eevee_samples = \
         bpy.props.IntProperty(name = "EEVEE Samples", default = 8, min = 4, max = 128)
 
-    bpy.types.Scene.playblaster_eevee_dof = \
-        bpy.props.BoolProperty(name = "EEVEE DoF", default = False)
+    #bpy.types.Scene.playblaster_eevee_dof = \
+    #    bpy.props.BoolProperty(name = "EEVEE DoF", default = False)
 
     bpy.types.Scene.playblaster_eevee_ambient_occlusion = \
         bpy.props.BoolProperty(name = "EEVEE AO", default = False)
@@ -136,7 +136,7 @@ def unregister():
     del bpy.types.Scene.playblaster_resolution_percentage
     del bpy.types.Scene.playblaster_use_compositing
     del bpy.types.Scene.playblaster_eevee_samples
-    del bpy.types.Scene.playblaster_eevee_dof
+    #del bpy.types.Scene.playblaster_eevee_dof
     del bpy.types.Scene.playblaster_eevee_ambient_occlusion
     del bpy.types.Scene.playblaster_simplify
     del bpy.types.Scene.playblaster_simplify_subdivision
