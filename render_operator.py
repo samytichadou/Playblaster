@@ -48,7 +48,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         # delete old playblast
         to_delete = get_file_in_folder(folder_path, output_name)
         if to_delete != "" :
-            delete_file(to_delete)
+            deletion = delete_file(to_delete)          
 
         rd = scn.render
         ffmpeg = rd.ffmpeg
@@ -154,7 +154,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
 
         new_scn = bpy.context.scene
 
-        cmd = blender + " -b " + new_blend_filepath + " -E " + render_engine + " -a"
+        cmd = '"' + blender + '"' + " -b " + '"' + new_blend_filepath + '"' + " -E " + render_engine + " -a"
 
         threading_render([cmd, total_frame, new_scn, folder_path, output_name, new_blend_filepath])
 

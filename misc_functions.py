@@ -16,8 +16,12 @@ def kill_subprocess(pid):
 
 #delete filepath
 def delete_file(filepath) :
-    if os.path.isfile(filepath) :
-        os.remove(filepath)
+    try:
+        if os.path.isfile(filepath) :
+            os.remove(filepath)
+            return True
+    except PermissionError:
+        return False
 
 #get file in folder with pattern :
 def get_file_in_folder(folder, pattern) :
@@ -35,3 +39,12 @@ def open_video_file(file_path) :
         os.startfile(file_path)
     else:                                   # linux variants
         subprocess.call(('xdg-open', file_path))
+
+#find current os
+def find_os() :
+    if platform.system() == 'Darwin':       # macOS
+        return "mac"
+    elif platform.system() == 'Windows':    # Windows
+        return "win"
+    else:                                   # linux variants
+        return "lin"
