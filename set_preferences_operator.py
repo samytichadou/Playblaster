@@ -6,11 +6,11 @@ class PlayblasterSetPreferences(bpy.types.Operator):
     bl_label = "Playblaster Settings"
 
     # UI props
-    show_debug = bpy.props.BoolProperty()
-    show_general = bpy.props.BoolProperty()
-    show_frame_range = bpy.props.BoolProperty()
-    show_engine = bpy.props.BoolProperty()
-    show_simplify = bpy.props.BoolProperty()
+    show_debug: bpy.props.BoolProperty()
+    show_general: bpy.props.BoolProperty()
+    show_frame_range: bpy.props.BoolProperty()
+    show_engine: bpy.props.BoolProperty()
+    show_simplify: bpy.props.BoolProperty()
 
     def execute(self, context):
         return {'FINISHED'}
