@@ -41,6 +41,7 @@ from .preferences import PlayblasterAddonPrefs
 from .modal_check import PlayblasterModalCheck
 from .set_preferences_operator import PlayblasterSetPreferences
 from .play_rendered_operator import PlayblasterPlayRendered
+from .gui import *
 
 
 # register
@@ -50,7 +51,8 @@ classes = (PlayblasterRenderOperator,
             PlayblasterAddonPrefs,
             PlayblasterModalCheck,
             PlayblasterSetPreferences,
-            PlayblasterPlayRendered
+            PlayblasterPlayRendered,
+            PLAYBLASTER_MT_viewport_menu,
             )
 
 def register():
@@ -62,7 +64,6 @@ def register():
         register_class(cls)
 
     ### PROPS ###
-
     bpy.types.Scene.playblaster_render_engine = \
         bpy.props.EnumProperty(
                         name = "Engine",
@@ -71,53 +72,40 @@ def register():
                         ('BLENDER_WORKBENCH', "Workbench", ""),
                         ('BLENDER_EEVEE', "EEVEE", ""),
                         ))
-
     bpy.types.Scene.playblaster_resolution_percentage = \
         bpy.props.IntProperty(name = "Resolution Percentage", default = 50, min = 1, max = 100)
-
     bpy.types.Scene.playblaster_frame_range_override = \
         bpy.props.BoolProperty(name = "Frame Range Override", default = False)
-
     bpy.types.Scene.playblaster_frame_range_in = \
         bpy.props.IntProperty(name = "Start Frame", min = 0, default = 1)
-
     bpy.types.Scene.playblaster_frame_range_out = \
         bpy.props.IntProperty(name = "End Frame", min = 1, default = 100)
-
     bpy.types.Scene.playblaster_use_compositing = \
         bpy.props.BoolProperty(name = "Compositing", default = False)
-
     bpy.types.Scene.playblaster_eevee_samples = \
         bpy.props.IntProperty(name = "EEVEE Samples", default = 8, min = 4, max = 128)
-
     #bpy.types.Scene.playblaster_eevee_dof = \
     #    bpy.props.BoolProperty(name = "EEVEE DoF", default = False)
-
     bpy.types.Scene.playblaster_eevee_ambient_occlusion = \
         bpy.props.BoolProperty(name = "EEVEE AO", default = False)
-
     bpy.types.Scene.playblaster_simplify = \
         bpy.props.BoolProperty(name = "Simplify", default = True)
-
     bpy.types.Scene.playblaster_simplify_subdivision = \
         bpy.props.IntProperty(name = "Max Subdivision", default = 0, min = 0, max = 6)
-
     bpy.types.Scene.playblaster_simplify_particles = \
         bpy.props.FloatProperty(name = "Max Child Particles", default = 0, min = 0, max = 1)
 
-
-
     bpy.types.Scene.playblaster_is_rendering = \
         bpy.props.BoolProperty()
-
     bpy.types.Scene.playblaster_completion = \
         bpy.props.IntProperty(min = 0, max = 100)
-
     bpy.types.Scene.playblaster_previous_render = \
         bpy.props.StringProperty()
-
     bpy.types.Scene.playblaster_debug = \
         bpy.props.BoolProperty(name = "Debug")
+
+    ### MENU ###
+    bpy.types.VIEW3D_MT_editor_menus.append(playblasterViewportFunction)
 
 def unregister():
 
@@ -128,7 +116,6 @@ def unregister():
         unregister_class(cls)
 
     ### PROPS ###
-
     del bpy.types.Scene.playblaster_render_engine
     del bpy.types.Scene.playblaster_frame_range_override
     del bpy.types.Scene.playblaster_frame_range_in
@@ -146,3 +133,6 @@ def unregister():
     del bpy.types.Scene.playblaster_completion
     del bpy.types.Scene.playblaster_previous_render
     del bpy.types.Scene.playblaster_debug
+
+    ### MENU ###
+    bpy.types.VIEW3D_MT_editor_menus.remove(playblasterViewportFunction)
