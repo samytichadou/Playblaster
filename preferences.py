@@ -1,6 +1,7 @@
 import bpy
 import os
 
+
 addon_name = os.path.basename(os.path.dirname(__file__))
 
 class PlayblasterAddonPrefs(bpy.types.AddonPreferences) :
@@ -61,3 +62,11 @@ class PlayblasterAddonPrefs(bpy.types.AddonPreferences) :
 def get_addon_preferences():
     addon = bpy.context.preferences.addons.get(addon_name)
     return getattr(addon, "preferences", None)
+
+
+### REGISTER ---
+def register():
+    bpy.utils.register_class(PlayblasterAddonPrefs)
+
+def unregister():
+    bpy.utils.unregister_class(PlayblasterAddonPrefs)

@@ -7,6 +7,7 @@ from .misc_functions import absolute_path, create_dir, get_file_in_folder, delet
 from .global_variables import blender_executable
 from .thread_functions import threading_render
 
+
 blend_temp = ""
 video_temp = ""
 
@@ -171,3 +172,11 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         bpy.ops.playblaster.modal_check(override)
 
         return {'FINISHED'}
+
+
+### REGISTER ---
+def register():
+    bpy.utils.register_class(PlayblasterRenderOperator)
+
+def unregister():
+    bpy.utils.unregister_class(PlayblasterRenderOperator)

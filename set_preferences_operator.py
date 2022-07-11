@@ -1,5 +1,6 @@
 import bpy
 
+
 class PlayblasterSetPreferences(bpy.types.Operator):
     """Set Playblaster scene settings"""
     bl_idname = "playblaster.set_preferences"
@@ -120,3 +121,11 @@ class PlayblasterSetPreferences(bpy.types.Operator):
         layout.operator("playblaster.render", icon = 'RENDER_ANIMATION')
         #layout.prop(context.scene, "playblaster_previous_render")
         layout.operator("playblaster.play_rendered", icon = 'PLAY')
+
+
+### REGISTER ---
+def register():
+    bpy.utils.register_class(PlayblasterSetPreferences)
+
+def unregister():
+    bpy.utils.unregister_class(PlayblasterSetPreferences)

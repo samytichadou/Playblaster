@@ -6,6 +6,7 @@ from .preferences import get_addon_preferences
 from .global_variables import modal_refreshing
 from .misc_functions import delete_file, open_video_file, get_file_in_folder
 
+
 ### UI ###
 
 # callback for loading bar in 3D view
@@ -164,3 +165,11 @@ class PlayblasterModalCheck(bpy.types.Operator):
         context.scene.playblaster_previous_render = vidfile
 
         self.report({'INFO'}, "Render Finished")
+
+
+### REGISTER ---
+def register():
+    bpy.utils.register_class(PlayblasterModalCheck)
+
+def unregister():
+    bpy.utils.unregister_class(PlayblasterModalCheck)

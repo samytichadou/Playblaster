@@ -1,8 +1,6 @@
 import bpy, os
 
-
-from .preferences import get_addon_preferences
-from .misc_functions import absolute_path, open_video_file
+from .misc_functions import open_video_file
 
 
 class PlayblasterPlayRendered(bpy.types.Operator):
@@ -20,3 +18,11 @@ class PlayblasterPlayRendered(bpy.types.Operator):
         open_video_file(context.scene.playblaster_previous_render)
 
         return {'FINISHED'}
+
+
+### REGISTER ---
+def register():
+    bpy.utils.register_class(PlayblasterPlayRendered)
+
+def unregister():
+    bpy.utils.unregister_class(PlayblasterPlayRendered)
