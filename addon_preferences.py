@@ -14,6 +14,12 @@ class PlayblasterAddonPrefs(bpy.types.AddonPreferences) :
             subtype = "DIR_PATH"
             )
 
+    playblast_folder_name : bpy.props.StringProperty(
+            name = "Playblast Folder Name",
+            description = "Name of the Playblast folder alongside blend file",
+            default="playblasts",
+            )
+
     player_path : bpy.props.StringProperty(
             name = "External Player Path",
             description = "Path of the executable of external player",
@@ -51,8 +57,10 @@ class PlayblasterAddonPrefs(bpy.types.AddonPreferences) :
 
         layout.prop(self, "playblast_folderpath")
 
+        layout.prop(self, "playblast_folder_name")
+
         box = layout.box()
-        row = box.row(align = True)
+        row = box.row(align = False)
         row.label(text = "Progress Bar", icon = 'TIME')
         row.prop(self, 'progress_bar_color', text = '')
         row.prop(self, 'progress_bar_size', text = 'Size')

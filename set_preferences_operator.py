@@ -44,6 +44,8 @@ class PLAYBLASTER_OT_set_preferences(bpy.types.Operator):
         row.label(text = 'General Settings')
 
         if self.show_general :
+            # file storage
+            box.prop(pb_props, 'playblast_location', text="Location")
 
             # resolution percentage
             box.prop(pb_settings, 'resolution_percentage', slider = True)

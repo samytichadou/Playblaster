@@ -3,7 +3,6 @@ import bpy
 
 class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     render_engine: bpy.props.EnumProperty(
-
         name = "Engine",
         default = 'BLENDER_EEVEE',
         items = (
@@ -33,6 +32,14 @@ class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):
     completion: bpy.props.IntProperty(min = 0, max = 100)
     previous_render: bpy.props.StringProperty()
     debug: bpy.props.BoolProperty(name = "Debug")
+    playblast_location: bpy.props.EnumProperty(
+        name = "Playblast Location",
+        default = 'ALONGSIDE',
+        items = (
+        ('PREFS', "Preferences Folder", ""),
+        ('ALONGSIDE', "Alongside blend file", ""),
+        ),
+    )
     
 
 ### REGISTER ---

@@ -27,7 +27,6 @@ class PlayblasterRenderOperator(bpy.types.Operator):
 
         # variables
         prefs = get_addon_preferences()
-        folder_path = absolute_path(prefs.playblast_folderpath)
 
         scn = context.scene
         pb_props = scn.playblaster_properties
@@ -37,10 +36,17 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         blend_dir = os.path.dirname(blend_filepath)
         blend_file = bpy.path.basename(blend_filepath)
         blend_name = os.path.splitext(blend_file)[0]
+        render_engine = pb_settings.render_engine
+
         new_blend_filepath = blend_temp = os.path.join(blend_dir, "playblast_temp_" + blend_file)
+        
+        if pb_props.playblast_location=="PREFS":
+            folder_path = absolute_path(prefs.playblast_folderpath)
+        else:
+            folder_path = os.path.join(blend_dir, prefs.playblast_folder_name)
+
         output_name = "playblast_" + blend_name + "_" + scn.name + "_"
         output_filepath = video_temp = os.path.join(folder_path, output_name)
-        render_engine = pb_settings.render_engine
 
         pb_props.is_rendering = True
         pb_props.completion = 0
