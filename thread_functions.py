@@ -11,6 +11,7 @@ def render_function(cmd, total_frame, scene, folder_path, output_name, blend_fil
     debug = pb_props.debug
     # launch rendering
     if debug : print(cmd)
+
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     frame_count = 0

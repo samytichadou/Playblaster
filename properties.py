@@ -2,6 +2,25 @@ import bpy
 
 
 class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
+    playblast_location: bpy.props.EnumProperty(
+        name = "Playblast Location",
+        default = 'ALONGSIDE',
+        items = (
+        ('PREFS', "Preferences Folder", ""),
+        ('ALONGSIDE', "Alongside blend file", ""),
+        ),
+    )
+    exclude_datetime: bpy.props.BoolProperty(name = "Exclude Datetime from Name", default = False)
+
+    render_type: bpy.props.EnumProperty(
+        name = "Render Type",
+        default = 'OPENGLKEY',
+        items = (
+        ('FULL', "Classic Render", ""),
+        ('OPENGL', "Open GL", ""),
+        ('OPENGLKEY', "Open GL Keyed", ""),
+        ),
+    )
     render_engine: bpy.props.EnumProperty(
         name = "Engine",
         default = 'BLENDER_EEVEE',
@@ -32,14 +51,6 @@ class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):
     completion: bpy.props.IntProperty(min = 0, max = 100)
     previous_render: bpy.props.StringProperty()
     debug: bpy.props.BoolProperty(name = "Debug")
-    playblast_location: bpy.props.EnumProperty(
-        name = "Playblast Location",
-        default = 'ALONGSIDE',
-        items = (
-        ('PREFS', "Preferences Folder", ""),
-        ('ALONGSIDE', "Alongside blend file", ""),
-        ),
-    )
     
 
 ### REGISTER ---

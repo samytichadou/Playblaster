@@ -4,7 +4,7 @@ import shutil
 
 from .addon_preferences import get_addon_preferences
 from .misc_functions import absolute_path, create_dir, get_file_in_folder, delete_file
-from .global_variables import blender_executable
+from . import global_variables as gv
 from .thread_functions import threading_render
 
 
@@ -31,7 +31,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         scn = context.scene
         pb_props = scn.playblaster_properties
         pb_settings = pb_props.playblast_settings
-        blender = blender_executable
+        blender = gv.blender_executable
         blend_filepath = bpy.data.filepath
         blend_dir = os.path.dirname(blend_filepath)
         blend_file = bpy.path.basename(blend_filepath)
@@ -40,15 +40,20 @@ class PlayblasterRenderOperator(bpy.types.Operator):
 
         new_blend_filepath = blend_temp = os.path.join(blend_dir, "playblast_temp_" + blend_file)
         
-        if pb_props.playblast_location=="PREFS":
+        if pb_settings.playblast_location=="PREFS":
             folder_path = absolute_path(prefs.playblast_folderpath)
         else:
             folder_path = os.path.join(blend_dir, prefs.playblast_folder_name)
 
-        output_name = "playblast_" + blend_name + "_" + scn.name + "_"
+        #output_name = "playblast_" + datetime + blend_name + "_" + scn.name + "_"
+        if pb_settings.exclude_datetime:
+            output_name = "playblast__%s_%s_" % (blend_name, scn.name)
+        else:
+            from datetime import datetime
+            datetime = datetime.now().strftime("%Y%m%d_%H%M%S")
+            output_name = "playblast_%s_%s_%s_" % (datetime, blend_name, scn.name)
         output_filepath = video_temp = os.path.join(folder_path, output_name)
 
-        pb_props.is_rendering = True
         pb_props.completion = 0
 
         # create dir if does not exist
@@ -72,9 +77,10 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         old_gopsize = ffmpeg.gopsize
         old_codec = ffmpeg.codec
         old_audio_codec = ffmpeg.audio_codec
-            # postprod
+        # postprod
         old_compositing = rd.use_compositing
         old_sequencer = rd.use_sequencer
+        old_preview_range = False
             # simplify
         if pb_settings.simplify :
             old_simplify_toggle = rd.use_simplify
@@ -90,6 +96,9 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         if pb_settings.frame_range_override and pb_settings.frame_range_in < pb_settings.frame_range_out :
             old_range_in = scn.frame_start
             old_range_out = scn.frame_end
+        if scn.use_preview_range:
+            old_preview_range = True
+            scn.use_preview_range = False
 
         ### change settings ###
         rd.filepath = output_filepath
@@ -118,6 +127,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         if pb_settings.frame_range_override and pb_settings.frame_range_in < pb_settings.frame_range_out :
             scn.frame_start = scn.playblaster_frame_range_in
             scn.frame_end = scn.playblaster_frame_range_out
+        if 
 
         # get total number of frames
         total_frame = context.scene.frame_end - context.scene.frame_start + 1
@@ -156,16 +166,27 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         if pb_settings.frame_range_override and pb_settings.frame_range_in < pb_settings.frame_range_out :
             scn.frame_start = old_range_in
             scn.frame_end = old_range_out
-
+        
+        scn.use_preview_range = old_preview_range
 
         # save current file
         bpy.ops.wm.save_as_mainfile(filepath = blend_filepath)
 
+        pb_props.is_rendering = True
+
         new_scn = bpy.context.scene
 
-        cmd = '"' + blender + '"' + " -b " + '"' + new_blend_filepath + '"' + " -E " + render_engine + " -a"
-
+        if pb_settings.render_type=='FULL':
+            #cmd = '"' + blender + '"' + " -b " + '"' + new_blend_filepath + '"' + " -E " + render_engine + " -a"
+            cmd = '"%s" -b "%s" -E %s -a' % (blender, new_blend_filepath, render_engine)
+        elif pb_settings.render_type=='OPENGL':
+            #cmd = '"' + blender + '"' + '"' + new_blend_filepath + '"' + " -P " + '"'gv.render_opengl_script
+            cmd = '"%s" "%s" -P "%s"' % (blender, new_blend_filepath, gv.render_opengl_script)
+        elif pb_settings.render_type=='OPENGLKEY':
+            #cmd = '"' + blender + '"' + '"' + new_blend_filepath + '"' + " -P " + gv.render_openglkey_script
+            cmd = '"%s" "%s" -P "%s"' % (blender, new_blend_filepath, gv.render_openglkey_script)
         threading_render([cmd, total_frame, new_scn, folder_path, output_name, new_blend_filepath])
+
 
         # launch modal check
         for w in bpy.context.window_manager.windows :
