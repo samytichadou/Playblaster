@@ -10,7 +10,7 @@ def playblaster_render_function() :
 
     # variables
     prefs = get_addon_preferences()
-    folder_path = absolute_path(prefs.prefs_folderpath)
+    folder_path = absolute_path(prefs.playblast_folderpath)
 
     scn = bpy.context.scene
     blender = blender_executable
@@ -18,7 +18,7 @@ def playblaster_render_function() :
     blend_dir = os.path.dirname(blend_filepath)
     blend_file = bpy.path.basename(blend_filepath)
     blend_name = os.path.splitext(blend_file)[0]
-    new_blend_filepath = os.path.join(blend_dir, "temp_" + blend_file)
+    new_blend_filepath = os.path.join(blend_dir, "playblast_temp_" + blend_file)
     output_name = "playblast_" + blend_name + "_" + scn.name
     output_filepath = os.path.join(folder_path, output_name)
     render_engine = scn.playblaster_render_engine

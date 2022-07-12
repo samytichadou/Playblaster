@@ -7,9 +7,9 @@ addon_name = os.path.basename(os.path.dirname(__file__))
 class PlayblasterAddonPrefs(bpy.types.AddonPreferences) :
     bl_idname = addon_name
 
-    prefs_folderpath : bpy.props.StringProperty(
-            name = "Preferences Folder Path",
-            default = os.path.join(bpy.utils.user_resource('CONFIG'), "playblaster"),
+    playblast_folderpath : bpy.props.StringProperty(
+            name = "Playblast Path",
+            default = os.path.join(bpy.utils.user_resource('DATAFILES'), "playblaster"),
             description = "Folder where temporary Playblast are stored",
             subtype = "DIR_PATH"
             )
@@ -49,7 +49,7 @@ class PlayblasterAddonPrefs(bpy.types.AddonPreferences) :
     def draw(self, context) :
         layout = self.layout
 
-        layout.prop(self, "prefs_folderpath")
+        layout.prop(self, "playblast_folderpath")
 
         box = layout.box()
         row = box.row(align = True)

@@ -30,35 +30,13 @@ bl_info = {
  "category": "Animation"}
 
 
-import bpy
-
-
-# IMPORT SPECIFICS
-##################################
-
-from .render_operator import PlayblasterRenderOperator
-from .preferences import PlayblasterAddonPrefs
-from .modal_check import PlayblasterModalCheck
-from .set_preferences_operator import PlayblasterSetPreferences
-from .play_rendered_operator import PlayblasterPlayRendered
-from .gui import *
-
-
 # register
 ##################################
 
-classes = (PlayblasterRenderOperator,
-            PlayblasterAddonPrefs,
-            PlayblasterModalCheck,
-            PlayblasterSetPreferences,
-            PlayblasterPlayRendered,
-            PLAYBLASTER_MT_viewport_menu,
-            )
-
 from . import (
+    addon_preferences,
     properties,
     render_operator,
-    preferences,
     modal_check,
     set_preferences_operator,
     play_rendered_operator,
@@ -68,7 +46,7 @@ from . import (
 def register():
     properties.register()
     render_operator.register()
-    preferences.register()
+    addon_preferences.register()
     modal_check.register()
     set_preferences_operator.register()
     play_rendered_operator.register()
@@ -77,7 +55,7 @@ def register():
 def unregister():
     properties.unregister()
     render_operator.unregister()
-    preferences.unregister()
+    addon_preferences.unregister()
     modal_check.unregister()
     set_preferences_operator.unregister()
     play_rendered_operator.unregister()

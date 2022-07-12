@@ -2,7 +2,7 @@ import bpy, os, gpu, blf
 
 from gpu_extras.batch import batch_for_shader
 
-from .preferences import get_addon_preferences
+from .addon_preferences import get_addon_preferences
 from .global_variables import modal_refreshing
 from .misc_functions import delete_file, open_video_file, get_file_in_folder
 
@@ -19,8 +19,8 @@ def draw_callback_px(self, context):
 
     # Progress Bar
     width = context.area.width
-
-    completion = context.scene.playblaster_completion / 100
+    pb_props = context.scene.playblaster_properties
+    completion = pb_props.completion / 100
     size = int(width * completion)
 
     # rectangle background
@@ -67,11 +67,11 @@ class PlayblasterModalCheck(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return context.scene.playblaster_is_rendering
+        return context.scene.playblaster_properties.is_rendering
 
     def modal(self, context, event):
         scn = context.scene
-        completion = scn.playblaster_completion
+        completion = scn.playblaster_properties.completion
 
         # redraw area
         try:
@@ -107,10 +107,12 @@ class PlayblasterModalCheck(bpy.types.Operator):
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
 
-        debug = context.scene.playblaster_debug
+        pb_props = context.scene.playblaster_properties
+
+        debug = pb_props.debug
 
         # turn off is_rendering
-        context.scene.playblaster_is_rendering = False
+        pb_props.is_rendering = False
 
         # get variables
         from .render_operator import blend_temp, video_temp
@@ -138,10 +140,12 @@ class PlayblasterModalCheck(bpy.types.Operator):
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
 
-        debug = context.scene.playblaster_debug
+        pb_props = context.scene.playblaster_properties
+
+        debug = pb_props.debug
 
         # turn off is_rendering
-        context.scene.playblaster_is_rendering = False
+        pb_props.is_rendering = False
 
         # get variables
         from .render_operator import blend_temp, video_temp
@@ -156,13 +160,13 @@ class PlayblasterModalCheck(bpy.types.Operator):
         # delete temp file
         delete_file(blend_temp)
         blend_temp = ""
-        context.scene.playblaster_previous_render = ""
+        pb_props.previous_render = ""
 
         # open video file
         vidfile = get_file_in_folder(os.path.dirname(video_temp), os.path.basename(video_temp))
         open_video_file(vidfile)
         video_temp = ""
-        context.scene.playblaster_previous_render = vidfile
+        pb_props.previous_render = vidfile
 
         self.report({'INFO'}, "Render Finished")
 

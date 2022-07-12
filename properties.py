@@ -27,7 +27,7 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     simplify_particles: bpy.props.FloatProperty(name = "Max Child Particles", default = 0, min = 0, max = 1)
 
 class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):
-    playblast_settings:   bpy.props.CollectionProperty(type = PLAYBLASTER_PR_playblast_settings, name="Playblast Settings")
+    playblast_settings:   bpy.props.PointerProperty(type = PLAYBLASTER_PR_playblast_settings, name="Playblast Settings")
 
     is_rendering: bpy.props.BoolProperty()
     completion: bpy.props.IntProperty(min = 0, max = 100)

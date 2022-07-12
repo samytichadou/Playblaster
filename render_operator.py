@@ -2,7 +2,7 @@ import bpy
 import os
 import shutil
 
-from .preferences import get_addon_preferences
+from .addon_preferences import get_addon_preferences
 from .misc_functions import absolute_path, create_dir, get_file_in_folder, delete_file
 from .global_variables import blender_executable
 from .thread_functions import threading_render
@@ -18,7 +18,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return bpy.data.is_saved and not context.scene.playblaster_is_rendering
+        return bpy.data.is_saved and not context.scene.playblaster_properties.is_rendering
 
     def execute(self, context):
         # global
@@ -27,21 +27,23 @@ class PlayblasterRenderOperator(bpy.types.Operator):
 
         # variables
         prefs = get_addon_preferences()
-        folder_path = absolute_path(prefs.prefs_folderpath)
+        folder_path = absolute_path(prefs.playblast_folderpath)
 
         scn = context.scene
+        pb_props = scn.playblaster_properties
+        pb_settings = pb_props.playblast_settings
         blender = blender_executable
         blend_filepath = bpy.data.filepath
         blend_dir = os.path.dirname(blend_filepath)
         blend_file = bpy.path.basename(blend_filepath)
         blend_name = os.path.splitext(blend_file)[0]
-        new_blend_filepath = blend_temp = os.path.join(blend_dir, "temp_" + blend_file)
+        new_blend_filepath = blend_temp = os.path.join(blend_dir, "playblast_temp_" + blend_file)
         output_name = "playblast_" + blend_name + "_" + scn.name + "_"
         output_filepath = video_temp = os.path.join(folder_path, output_name)
-        render_engine = scn.playblaster_render_engine
+        render_engine = pb_settings.render_engine
 
-        scn.playblaster_is_rendering = True
-        scn.playblaster_completion = 0
+        pb_props.is_rendering = True
+        pb_props.completion = 0
 
         # create dir if does not exist
         create_dir(folder_path)
@@ -68,7 +70,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         old_compositing = rd.use_compositing
         old_sequencer = rd.use_sequencer
             # simplify
-        if scn.playblaster_simplify :
+        if pb_settings.simplify :
             old_simplify_toggle = rd.use_simplify
             old_simplify_subdiv_render = rd.simplify_subdivision_render
             old_simplify_particles = rd.simplify_child_particles_render
@@ -79,14 +81,14 @@ class PlayblasterRenderOperator(bpy.types.Operator):
             old_eevee_ao = scn.eevee.use_gtao
 
             # frame range
-        if scn.playblaster_frame_range_override and scn.playblaster_frame_range_in < scn.playblaster_frame_range_out :
+        if pb_settings.frame_range_override and pb_settings.frame_range_in < pb_settings.frame_range_out :
             old_range_in = scn.frame_start
             old_range_out = scn.frame_end
 
         ### change settings ###
         rd.filepath = output_filepath
         rd.image_settings.file_format = 'FFMPEG'
-        rd.resolution_percentage = scn.playblaster_resolution_percentage
+        rd.resolution_percentage = pb_settings.resolution_percentage
         ffmpeg.format = 'MPEG4'
         ffmpeg.codec = 'H264'
         ffmpeg.constant_rate_factor = 'HIGH'
@@ -94,20 +96,20 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         ffmpeg.gopsize = 10
         ffmpeg.audio_codec = 'AAC'
             # postprod
-        rd.use_compositing = scn.playblaster_use_compositing
+        rd.use_compositing = pb_settings.use_compositing
         rd.use_sequencer = False
             # simplify
-        if scn.playblaster_simplify :
+        if pb_settings.simplify :
             rd.use_simplify = True
-            rd.simplify_subdivision_render = scn.playblaster_simplify_subdivision
-            rd.simplify_child_particles_render = scn.playblaster_simplify_particles
+            rd.simplify_subdivision_render = pb_settings.simplify_subdivision
+            rd.simplify_child_particles_render = pb_settings.simplify_particles
             # EEVEE
         if render_engine == "BLENDER_EEVEE" :
-            scn.eevee.taa_render_samples = scn.playblaster_eevee_samples
+            scn.eevee.taa_render_samples = pb_settings.eevee_samples
             #scn.eevee.use_dof = scn.playblaster_eevee_dof
-            scn.eevee.use_gtao = scn.playblaster_eevee_ambient_occlusion
+            scn.eevee.use_gtao = pb_settings.eevee_ambient_occlusion
             # frame range
-        if scn.playblaster_frame_range_override and scn.playblaster_frame_range_in < scn.playblaster_frame_range_out :
+        if pb_settings.frame_range_override and pb_settings.frame_range_in < pb_settings.frame_range_out :
             scn.frame_start = scn.playblaster_frame_range_in
             scn.frame_end = scn.playblaster_frame_range_out
 
@@ -135,7 +137,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         rd.use_compositing = old_compositing
         rd.use_sequencer = old_sequencer
             # simplify
-        if scn.playblaster_simplify :
+        if pb_settings.simplify :
             rd.use_simplify = old_simplify_toggle
             rd.simplify_subdivision_render = old_simplify_subdiv_render
             rd.simplify_child_particles_render = old_simplify_particles
@@ -145,7 +147,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
             #scn.eevee.use_dof = old_eevee_dof
             scn.eevee.use_gtao = old_eevee_ao
             # frame range
-        if scn.playblaster_frame_range_override and scn.playblaster_frame_range_in < scn.playblaster_frame_range_out :
+        if pb_settings.frame_range_override and pb_settings.frame_range_in < pb_settings.frame_range_out :
             scn.frame_start = old_range_in
             scn.frame_end = old_range_out
 

@@ -1,7 +1,7 @@
 import bpy
 
 
-class PlayblasterSetPreferences(bpy.types.Operator):
+class PLAYBLASTER_OT_set_preferences(bpy.types.Operator):
     """Set Playblaster scene settings"""
     bl_idname = "playblaster.set_preferences"
     bl_label = "Playblaster Settings"
@@ -13,15 +13,14 @@ class PlayblasterSetPreferences(bpy.types.Operator):
     show_engine: bpy.props.BoolProperty()
     show_simplify: bpy.props.BoolProperty()
 
-    def execute(self, context):
-        return {'FINISHED'}
-
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
 
     def draw(self, context):
         scn = context.scene
         layout = self.layout
+        pb_props = scn.playblaster_properties
+        pb_settings = pb_props.playblast_settings
 
         # debug
         box = layout.box()
@@ -29,12 +28,12 @@ class PlayblasterSetPreferences(bpy.types.Operator):
         icon_debug = 'TRIA_DOWN' if self.show_debug else 'TRIA_RIGHT'
         row.prop(self, 'show_debug', text = '', icon = icon_debug, emboss = False)
         row.label(text = 'Debug')
-        row.prop(scn, 'playblaster_debug', text = '')
+        row.prop(pb_props, 'debug', text = '')
         if self.show_debug :
             row = box.row()
-            if not scn.playblaster_debug :
+            if not pb_props.debug :
                 row.enabled = False
-            row.prop(scn, 'playblaster_is_rendering')
+            row.prop(pb_props, 'is_rendering')
 
 
         # general settings
@@ -47,10 +46,10 @@ class PlayblasterSetPreferences(bpy.types.Operator):
         if self.show_general :
 
             # resolution percentage
-            box.prop(scn, 'playblaster_resolution_percentage', slider = True)
+            box.prop(pb_settings, 'resolution_percentage', slider = True)
 
             # Compositing
-            box.prop(scn, 'playblaster_use_compositing')
+            box.prop(pb_settings, 'use_compositing')
 
             # Frame range override
             subbox = box.box()
@@ -58,13 +57,13 @@ class PlayblasterSetPreferences(bpy.types.Operator):
             icon_frame_range = 'TRIA_DOWN' if self.show_frame_range else 'TRIA_RIGHT'
             row.prop(self, 'show_frame_range', text = '', icon = icon_frame_range, emboss = False)
             row.label(text = "Frame Range")
-            row.prop(scn, 'playblaster_frame_range_override', text = '')
+            row.prop(pb_settings, 'frame_range_override', text = '')
             if self.show_frame_range :
                 col = subbox.column(align = True)
-                if not scn.playblaster_frame_range_override :
+                if not pb_settings.frame_range_override :
                     col.enabled = False
-                col.prop(scn, 'playblaster_frame_range_in')
-                col.prop(scn, 'playblaster_frame_range_out')
+                col.prop(pb_settings, 'frame_range_in')
+                col.prop(pb_settings, 'frame_range_out')
 
             # Simplify
             subbox = box.box()
@@ -72,13 +71,13 @@ class PlayblasterSetPreferences(bpy.types.Operator):
             icon_simplify = 'TRIA_DOWN' if self.show_simplify else 'TRIA_RIGHT'
             row.prop(self, 'show_simplify', text = '', icon = icon_simplify, emboss = False)
             row.label(text = 'Simplify')
-            row.prop(scn, 'playblaster_simplify', text = '')
+            row.prop(pb_settings, 'simplify', text = '')
             if self.show_simplify :
                 col = subbox.column(align = True)
-                if not scn.playblaster_simplify :
+                if not pb_settings.simplify :
                     col.enabled = False
-                col.prop(scn, 'playblaster_simplify_subdivision')
-                col.prop(scn, 'playblaster_simplify_particles')
+                col.prop(pb_settings, 'simplify_subdivision')
+                col.prop(pb_settings, 'simplify_particles')
 
 
         # render engine
@@ -87,14 +86,14 @@ class PlayblasterSetPreferences(bpy.types.Operator):
         icon_engine = 'TRIA_DOWN' if self.show_engine else 'TRIA_RIGHT'
         row.prop(self, 'show_engine', text = '', icon = icon_engine, emboss = False)
         row.label(text = "Engine")
-        row.prop(scn, 'playblaster_render_engine', text = "")
+        row.prop(pb_settings, 'render_engine', text = "")
 
         if self.show_engine :
 
             # EEVEE
-            if scn.playblaster_render_engine == "BLENDER_EEVEE" :
+            if pb_settings.render_engine == "BLENDER_EEVEE" :
                 # eevee settings
-                box.prop(scn, 'playblaster_eevee_samples')
+                box.prop(pb_settings, 'eevee_samples')
                 # box.prop(scn, 'playblaster_eevee_dof')
                 # shadow cube size
                 # shadow cascade size
@@ -104,7 +103,7 @@ class PlayblasterSetPreferences(bpy.types.Operator):
                 # overscan
 
             # workbench
-            elif scn.playblaster_render_engine == "BLENDER_WORKBENCH" :
+            elif pb_settings.render_engine == "BLENDER_WORKBENCH" :
                 pass
                 # lighting type
                 # color type
@@ -122,10 +121,13 @@ class PlayblasterSetPreferences(bpy.types.Operator):
         #layout.prop(context.scene, "playblaster_previous_render")
         layout.operator("playblaster.play_rendered", icon = 'PLAY')
 
+    def execute(self, context):
+        return {'FINISHED'}
+
 
 ### REGISTER ---
 def register():
-    bpy.utils.register_class(PlayblasterSetPreferences)
+    bpy.utils.register_class(PLAYBLASTER_OT_set_preferences)
 
 def unregister():
-    bpy.utils.unregister_class(PlayblasterSetPreferences)
+    bpy.utils.unregister_class(PLAYBLASTER_OT_set_preferences)
