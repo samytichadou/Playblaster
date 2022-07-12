@@ -15,6 +15,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
     """Create Playblast of current scene"""
     bl_idname = "playblaster.render"
     bl_label = "Playblaster Render"
+    bl_options = {'INTERNAL'}
 
     @classmethod
     def poll(cls, context):
@@ -67,7 +68,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         rd = scn.render
         ffmpeg = rd.ffmpeg
 
-        ### store settings ###
+        ### Store settings ###
         old_filepath = rd.filepath
         old_file_format = rd.image_settings.file_format
         old_res_pct = rd.resolution_percentage
@@ -81,18 +82,17 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         old_compositing = rd.use_compositing
         old_sequencer = rd.use_sequencer
         old_preview_range = False
-            # simplify
+        # simplify
         if pb_settings.simplify :
             old_simplify_toggle = rd.use_simplify
             old_simplify_subdiv_render = rd.simplify_subdivision_render
             old_simplify_particles = rd.simplify_child_particles_render
-            # EEVEE
+        # EEVEE
         if render_engine == "BLENDER_EEVEE" :
             old_render_samples = scn.eevee.taa_render_samples
             #old_eevee_dof = scn.eevee.use_dof
             old_eevee_ao = scn.eevee.use_gtao
-
-            # frame range
+        # Frame range
         if pb_settings.frame_range_override and pb_settings.frame_range_in < pb_settings.frame_range_out :
             old_range_in = scn.frame_start
             old_range_out = scn.frame_end
@@ -100,7 +100,19 @@ class PlayblasterRenderOperator(bpy.types.Operator):
             old_preview_range = True
             scn.use_preview_range = False
 
-        ### change settings ###
+        # # Shading
+        # if pb_settings.render_type!="FULL":
+        #     if render_engine == "BLENDER_EEVEE":
+        #         shading="MATERIAL"
+        #     else:
+        #         shading="SOLID"
+        #     old_shading_list=[]
+        #     for area in context.screen.areas:
+        #         if area.type=="VIEW_3D":
+        #             old_shading_list.append(area.spaces[0].shading.type)
+        #             area.spaces[0].shading.type=shading
+
+        ### Change settings ###
         rd.filepath = output_filepath
         rd.image_settings.file_format = 'FFMPEG'
         rd.resolution_percentage = pb_settings.resolution_percentage
@@ -110,20 +122,21 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         ffmpeg.ffmpeg_preset = 'REALTIME'
         ffmpeg.gopsize = 10
         ffmpeg.audio_codec = 'AAC'
-            # postprod
+        # Postprod
         rd.use_compositing = pb_settings.use_compositing
         rd.use_sequencer = False
-            # simplify
+        # Simplify
         if pb_settings.simplify :
             rd.use_simplify = True
             rd.simplify_subdivision_render = pb_settings.simplify_subdivision
             rd.simplify_child_particles_render = pb_settings.simplify_particles
-            # EEVEE
-        if render_engine == "BLENDER_EEVEE" :
+        # EEVEE
+        if render_engine == "BLENDER_EEVEE":
             scn.eevee.taa_render_samples = pb_settings.eevee_samples
             #scn.eevee.use_dof = scn.playblaster_eevee_dof
             scn.eevee.use_gtao = pb_settings.eevee_ambient_occlusion
-            # frame range
+            
+        # Frame range
         if pb_settings.frame_range_override and pb_settings.frame_range_in < pb_settings.frame_range_out :
             scn.frame_start = scn.playblaster_frame_range_in
             scn.frame_end = scn.playblaster_frame_range_out
@@ -137,7 +150,7 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         # save temporary file
         shutil.copy(blend_filepath, new_blend_filepath)
 
-        ### restore settings ###
+        ### Restore settings ###
         rd.filepath = old_filepath
         rd.image_settings.file_format = old_file_format
         rd.resolution_percentage = old_res_pct
@@ -148,25 +161,33 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         ffmpeg.gopsize = old_gopsize
         ffmpeg.codec = old_codec
         ffmpeg.audio_codec = old_audio_codec
-            # postprod
+        # Postprod
         rd.use_compositing = old_compositing
         rd.use_sequencer = old_sequencer
-            # simplify
+        # Simplify
         if pb_settings.simplify :
             rd.use_simplify = old_simplify_toggle
             rd.simplify_subdivision_render = old_simplify_subdiv_render
             rd.simplify_child_particles_render = old_simplify_particles
-            # EEVEE
+        # EEVEE
         if render_engine == "BLENDER_EEVEE" :
             scn.eevee.taa_render_samples = old_render_samples
             #scn.eevee.use_dof = old_eevee_dof
             scn.eevee.use_gtao = old_eevee_ao
-            # frame range
+        # Frame range
         if pb_settings.frame_range_override and pb_settings.frame_range_in < pb_settings.frame_range_out :
             scn.frame_start = old_range_in
             scn.frame_end = old_range_out
         
         scn.use_preview_range = old_preview_range
+
+        # # Shading
+        # if pb_settings.render_type!="FULL":
+        #     n=0
+        #     for area in context.screen.areas:
+        #         if area.type=="VIEW_3D":
+        #             area.spaces[0].shading.type=old_shading_list[n]
+        #             n+=1
 
         # save current file
         bpy.ops.wm.save_as_mainfile(filepath = blend_filepath)
