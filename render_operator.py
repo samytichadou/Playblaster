@@ -127,7 +127,6 @@ class PlayblasterRenderOperator(bpy.types.Operator):
         if pb_settings.frame_range_override and pb_settings.frame_range_in < pb_settings.frame_range_out :
             scn.frame_start = scn.playblaster_frame_range_in
             scn.frame_end = scn.playblaster_frame_range_out
-        if 
 
         # get total number of frames
         total_frame = context.scene.frame_end - context.scene.frame_start + 1
