@@ -2,16 +2,6 @@ import bpy
 
 
 class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
-    playblast_location: bpy.props.EnumProperty(
-        name = "Playblast Location",
-        default = 'ALONGSIDE',
-        items = (
-        ('PREFS', "Preferences Folder", ""),
-        ('ALONGSIDE', "Alongside blend file", ""),
-        ),
-    )
-    exclude_datetime: bpy.props.BoolProperty(name = "Exclude Datetime from Name", default = False)
-
     render_type: bpy.props.EnumProperty(
         name = "Render Type",
         default = 'OPENGLKEY',
@@ -44,14 +34,10 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     simplify_subdivision: bpy.props.IntProperty(name = "Max Subdivision", default = 0, min = 0, max = 6)
     simplify_particles: bpy.props.FloatProperty(name = "Max Child Particles", default = 0, min = 0, max = 1)
 
+
 class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):
     playblast_settings:   bpy.props.PointerProperty(type = PLAYBLASTER_PR_playblast_settings, name="Playblast Settings")
 
-    is_rendering: bpy.props.BoolProperty()
-    completion: bpy.props.IntProperty(min = 0, max = 100)
-    previous_render: bpy.props.StringProperty()
-    debug: bpy.props.BoolProperty(name = "Debug")
-    
 
 ### REGISTER ---
 def register():

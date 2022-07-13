@@ -1,4 +1,4 @@
-import bpy, os, signal, subprocess, platform
+import bpy, os, subprocess, platform
 
 # absolute path
 def absolute_path(path) :
@@ -9,10 +9,6 @@ def absolute_path(path) :
 def create_dir(dir_path) :
     if os.path.isdir(dir_path) == False :
             os.makedirs(dir_path)
-
-#kill subprocess
-def kill_subprocess(pid):
-    os.kill(pid, signal.SIGTERM)
 
 #delete filepath
 def delete_file(filepath) :
