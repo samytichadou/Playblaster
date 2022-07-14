@@ -37,14 +37,17 @@ from . import (
     addon_preferences,
     properties,
     gui,
+    manage_playblasts_operator,
 )
 
 def register():
     properties.register()
     addon_preferences.register()
     gui.register()
+    manage_playblasts_operator.register()
 
 def unregister():
     properties.unregister()
     addon_preferences.unregister()
     gui.unregister()
+    manage_playblasts_operator.unregister()

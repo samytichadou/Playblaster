@@ -2,9 +2,10 @@ import bpy
 
 
 class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
+    # Render
     render_type: bpy.props.EnumProperty(
         name = "Render Type",
-        default = 'OPENGLKEY',
+        default = 'OPENGL',
         items = (
         ('FULL', "Classic Render", ""),
         ('OPENGL', "Open GL", ""),
@@ -19,14 +20,7 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
         ('BLENDER_EEVEE', "EEVEE", ""),
         ),
     )
-    resolution_percentage: bpy.props.IntProperty(name = "Resolution Percentage", default = 50, min = 1, max = 100)
 
-    frame_range_override: bpy.props.BoolProperty(name = "Frame Range Override", default = False)
-    frame_range_in: bpy.props.IntProperty(name = "Start Frame", min = 0, default = 1)
-    frame_range_out: bpy.props.IntProperty(name = "End Frame", min = 1, default = 100)
-    
-    use_compositing: bpy.props.BoolProperty(name = "Compositing", default = False)
-    
     eevee_samples: bpy.props.IntProperty(name = "EEVEE Samples", default = 8, min = 4, max = 128)
     eevee_ambient_occlusion: bpy.props.BoolProperty(name = "EEVEE AO", default = False)
     
@@ -34,9 +28,29 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     simplify_subdivision: bpy.props.IntProperty(name = "Max Subdivision", default = 0, min = 0, max = 6)
     simplify_particles: bpy.props.FloatProperty(name = "Max Child Particles", default = 0, min = 0, max = 1)
 
+    # Output
+    resolution_percentage: bpy.props.IntProperty(name = "Resolution Percentage", default = 50, min = 1, max = 100)
+    frame_range_type: bpy.props.EnumProperty(
+        name = "Frame Range",
+        default = 'SCENE',
+        items = (
+        ('SCENE', "Scene Frame Range", ""),
+        ('PREVIEW', "Preview Frame Range", ""),
+        ('OVERRIDE', "Overriden Frame Range", ""),
+        ),
+    )
+    #frame_range_override: bpy.props.BoolProperty(name = "Frame Range Override", default = False)
+    frame_range_in: bpy.props.IntProperty(name = "Start Frame", min = 0, default = 1)
+    frame_range_out: bpy.props.IntProperty(name = "End Frame", min = 1, default = 100)
+    use_compositing: bpy.props.BoolProperty(name = "Compositing", default = False)
+    use_3dviewport: bpy.props.BoolProperty(name = "Use 3D View", default = False)
+
+    is_rendered: bpy.props.BoolProperty()
+
 
 class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):
-    playblast_settings:   bpy.props.PointerProperty(type = PLAYBLASTER_PR_playblast_settings, name="Playblast Settings")
+    playblasts: bpy.props.CollectionProperty(type = PLAYBLASTER_PR_playblast_settings, name="Playblast Settings")
+    playblast_index: bpy.props.IntProperty(default = -1, min = -1)
 
 
 ### REGISTER ---
