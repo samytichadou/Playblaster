@@ -38,6 +38,7 @@ from . import (
     properties,
     gui,
     manage_playblasts_operator,
+    render_operator,
 )
 
 def register():
@@ -45,9 +46,11 @@ def register():
     addon_preferences.register()
     gui.register()
     manage_playblasts_operator.register()
+    render_operator.register()
 
 def unregister():
     properties.unregister()
     addon_preferences.unregister()
     gui.unregister()
     manage_playblasts_operator.unregister()
+    render_operator.unregister()

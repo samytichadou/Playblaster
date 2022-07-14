@@ -39,13 +39,22 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
         ('OVERRIDE', "Overriden Frame Range", ""),
         ),
     )
-    #frame_range_override: bpy.props.BoolProperty(name = "Frame Range Override", default = False)
     frame_range_in: bpy.props.IntProperty(name = "Start Frame", min = 0, default = 1)
     frame_range_out: bpy.props.IntProperty(name = "End Frame", min = 1, default = 100)
     use_compositing: bpy.props.BoolProperty(name = "Compositing", default = False)
     use_3dviewport: bpy.props.BoolProperty(name = "Use 3D View", default = False)
 
-    is_rendered: bpy.props.BoolProperty()
+    end_action: bpy.props.EnumProperty(
+        name = "End Action",
+        default = 'PLAY',
+        items = (
+        ('PLAY', "Play Video", ""),
+        ('PLAYBLENDER', "Play Video in Blender Player", ""),
+        ('NOTHING', "Do Nothing", ""),
+        ),
+    )
+
+    rendered_filepath: bpy.props.StringProperty()
 
 
 class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):

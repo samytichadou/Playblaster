@@ -4,11 +4,12 @@ import bpy
 class PLAYBLASTER_UL_playblasts(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
         layout.prop(item, "name", text="", emboss=False)
-        sub=layout.row(align=True)
-        if not item.is_rendered:
+        row=layout.row(align=True)
+        row.operator("playblaster.render_playblast", text="", icon="RENDER_ANIMATION", emboss=False)
+        sub=row.row(align=True)
+        if not item.rendered_filepath:
             sub.enabled=False
         sub.label(text="", icon="FILE_MOVIE")
-        sub.label(text="", icon="RENDER_ANIMATION")
         sub.label(text="", icon="X")
 
 
@@ -106,6 +107,8 @@ class PLAYBLASTER_PT_playblast_output_settings_sub(bpy.types.Panel):
         col.separator()
         col.prop(active, "use_compositing")
         col.prop(active, "use_3dviewport")
+        col.separator()
+        col.prop(active, "end_action")
 
 
 ### REGISTER ---

@@ -21,13 +21,13 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
         playblasts = props.playblasts
 
         if self.action=="ADD":
-            new_action=playblasts.add()
-            new_action.name="New Action"
+            new_playblast=playblasts.add()
+            new_playblast.name="New Playblast"
             props.playblast_index=len(playblasts)-1
 
         elif self.action=="REMOVE":
             if props.playblast_index<=len(playblasts)-1:
-                playblasts.remove(props.action_index)
+                playblasts.remove(props.playblast_index)
                 if props.playblast_index>len(playblasts)-1:
                     props.playblast_index-=1
                 elif len(playblasts)==0:

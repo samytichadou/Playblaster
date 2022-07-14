@@ -1,0 +1,8 @@
+- handler startup pour vérif fichiers
+- supprimer fichiers avec playblast
+- refresh fichiers operators
+- datetime rendered
+- incremental playblast
+- play rendered op
+- remove file
+- shading correctly (use context opengl)
