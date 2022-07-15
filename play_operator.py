@@ -33,7 +33,13 @@ class PLAYBLASTER_OT_play_playblast(bpy.types.Operator):
         if active.player=="DEFAULT":
             play_video_external(active.rendered_filepath)
         elif active.player=="BLENDER":
+            old_filepath=scn.render.filepath
+            old_extension=scn.render.use_file_extension
+            scn.render.filepath=active.rendered_filepath
+            scn.render.use_file_extension=False
             bpy.ops.render.play_rendered_anim()
+            scn.render.filepath=old_filepath
+            scn.render.use_file_extension=old_extension
 
         self.report({'INFO'}, "Playblast Playing")
 
