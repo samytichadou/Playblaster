@@ -22,7 +22,7 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
         ),
     )
     preselection: bpy.props.EnumProperty(
-        name = "Pre Selection",
+        name = "Select",
         default = 'ALL',
         items = (
         ('ALL', "All", ""),
