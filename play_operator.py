@@ -8,15 +8,21 @@ class PLAYBLASTER_OT_play_playblast(bpy.types.Operator):
     bl_label = "Play Playblast"
     bl_options = {"INTERNAL"}
 
+    index: bpy.props.IntProperty()
+
     @classmethod
     def poll(cls, context):
-        props = context.scene.playblaster_properties
-        return props.playblast_index in range(0, len(props.playblasts)) and bpy.data.is_saved
+        return bpy.data.is_saved
 
     def execute(self, context):
         scn = context.scene
         props = scn.playblaster_properties
-        active = props.playblasts[props.playblast_index]
+
+        if self.index not in range(0, len(props.playblasts)):
+            self.report({'WARNING'}, "Playblast not existing")
+            return {'FINISHED'}
+
+        active = props.playblasts[self.index]
         
         if not os.path.isfile(active.rendered_filepath):
             active.rendered_filepath=""

@@ -75,6 +75,7 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
 
     rendered_filepath: bpy.props.StringProperty()
     hash: bpy.props.StringProperty()
+    index: bpy.props.IntProperty()
 
 
 class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):

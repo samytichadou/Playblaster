@@ -9,11 +9,11 @@ class PLAYBLASTER_UL_playblasts(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
         layout.prop(item, "name", text="", emboss=False)
         row=layout.row(align=True)
-        row.operator("playblaster.render_playblast", text="", icon="FILE_MOVIE", emboss=False)
+        row.operator("playblaster.render_playblast", text="", icon="FILE_MOVIE", emboss=False).index=item.index
         sub=row.row(align=True)
         if not item.rendered_filepath:
             sub.enabled=False
-        sub.operator("playblaster.play_playblast", text="", icon="PLAY", emboss=False)
+        sub.operator("playblaster.play_playblast", text="", icon="PLAY", emboss=False).index=item.index
         # sub.label(text="", icon="X")
 
 

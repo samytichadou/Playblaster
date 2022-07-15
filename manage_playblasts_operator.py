@@ -24,17 +24,20 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
         scn=context.scene
         props = scn.playblaster_properties
         playblasts = props.playblasts
+        check_indexes=False
 
+        # Actions
         if self.action=="ADD":
             new_playblast=playblasts.add()
             new_playblast.name="New Playblast"
             new_playblast.frame_range_in=scn.frame_start
             new_playblast.frame_range_out=scn.frame_end
             new_playblast.hash=generate_random()
-            props.playblast_index=len(playblasts)-1
+            props.playblast_index=new_playblast.index=len(playblasts)-1
 
         elif self.action=="REMOVE":
             if props.playblast_index<=len(playblasts)-1:
+                check_indexes=True
                 playblasts.remove(props.playblast_index)
                 if props.playblast_index>len(playblasts)-1:
                     props.playblast_index-=1
@@ -47,10 +50,18 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
             else:
                 target = props.playblast_index+1
             if target!=-1 and target<len(playblasts):
+                check_indexes=True
                 playblasts.move(props.playblast_index, target)
                 props.playblast_index=target
 
-        # redraw ui
+        # Recalculate indexes
+        if check_indexes:
+            n=0
+            for p in playblasts:
+                p.index=n
+                n+=1
+
+        # Redraw ui
         for area in context.screen.areas:
             area.tag_redraw()
 
