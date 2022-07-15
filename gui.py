@@ -1,23 +1,27 @@
 import bpy
 
 
+def view_header_gui(self, context):
+    self.layout.operator('playblaster.render_playblast', text="", icon= 'FILE_MOVIE')
+
+
 class PLAYBLASTER_UL_playblasts(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
         layout.prop(item, "name", text="", emboss=False)
         row=layout.row(align=True)
-        row.operator("playblaster.render_playblast", text="", icon="RENDER_ANIMATION", emboss=False)
-        sub=row.row(align=True)
-        if not item.rendered_filepath:
-            sub.enabled=False
-        sub.label(text="", icon="FILE_MOVIE")
-        sub.label(text="", icon="X")
+        row.operator("playblaster.render_playblast", text="", icon="FILE_MOVIE", emboss=False)
+        # sub=row.row(align=True)
+        # if not item.rendered_filepath:
+        #     sub.enabled=False
+        # sub.label(text="", icon="PLAY")
+        # sub.label(text="", icon="X")
 
 
 class PLAYBLASTER_PT_playblast(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = "Playblast"
-    bl_label = "Playblasts"
+    bl_category = "View"
+    bl_label = "Playblaster"
 
     @classmethod
     def poll(cls, context):
@@ -60,13 +64,12 @@ class PLAYBLASTER_PT_playblast_render_settings_sub(bpy.types.Panel):
 
         col=layout.column(align=True)
         col.prop(active, "render_type", text="Type")
-        col.prop(active, "render_engine", text="Engine")
+        col.prop(active, "shading", text="Shading")
         col.separator()
-        subcol=col.column(align=True)
-        if active.render_engine!="BLENDER_EEVEE":
-            subcol.enabled=False
-        subcol.prop(active, "eevee_samples")
-        subcol.prop(active, "eevee_ambient_occlusion")
+        col.prop(active, "eevee_samples")
+        col.prop(active, "eevee_ambient_occlusion")
+        col.separator()
+        col.prop(active, "show_overlays")
         col.separator()
         col.prop(active, "simplify")
         subcol=col.column(align=True)
@@ -113,12 +116,14 @@ class PLAYBLASTER_PT_playblast_output_settings_sub(bpy.types.Panel):
 
 ### REGISTER ---
 def register():
+    bpy.types.VIEW3D_HT_header.append(view_header_gui)
     bpy.utils.register_class(PLAYBLASTER_UL_playblasts)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast_render_settings_sub)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast_output_settings_sub)
 
 def unregister():
+    bpy.types.VIEW3D_HT_header.remove(view_header_gui)
     bpy.utils.unregister_class(PLAYBLASTER_UL_playblasts)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_render_settings_sub)

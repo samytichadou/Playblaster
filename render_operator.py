@@ -35,12 +35,21 @@ list_ffmpeg = (
 )
 
 list_eevee = (
-    "taa_render_samples",
+    "taa_samples",
     "use_gtao",
 )
 
 list_shading = (
     "type",
+)
+
+list_region3d = (
+    "view_perspective",
+    "view_matrix",
+)
+
+list_overlay = (
+    "show_overlays",
 )
 
 def store_parameters(scene, context):
@@ -71,6 +80,16 @@ def store_parameters(scene, context):
     for p in list_shading:
         datas[p] = getattr(shading, p)
 
+    # 3d region
+    region_3d=context.area.spaces[0].region_3d
+    for p in list_region3d:
+        datas[p] = getattr(region_3d, p)
+
+    # Overlay
+    overlay=context.area.spaces[0].overlay
+    for p in list_overlay:
+        datas[p] = getattr(overlay, p)
+
     return datas
 
 def restore_parameters(datas, scene, context):
@@ -99,11 +118,21 @@ def restore_parameters(datas, scene, context):
     for p in list_shading:
         setattr(shading, p, datas[p])
 
-def return_filepath():
+    # 3d region
+    region_3d=context.area.spaces[0].region_3d
+    for p in list_region3d:
+        setattr(region_3d, p, datas[p])
+
+    # Overlay
+    overlay=context.area.spaces[0].overlay
+    for p in list_overlay:
+        setattr(overlay, p, datas[p])
+
+def return_filepath(playblast):
     prefs=get_addon_preferences()
     blend_fp=bpy.data.filepath
     blend_name=os.path.splitext(os.path.basename(blend_fp))[0]
-    file_name="playblast_%s_" % blend_name
+    file_name="%s_%s_%s_" % (playblast.hash, playblast.name, blend_name)
     if prefs.playblast_location=="ALONGSIDE":
         tmp = os.path.join(os.path.dirname(blend_fp), prefs.playblast_folder_name)
         fp_dir = os.path.join(tmp, blend_name)
@@ -122,16 +151,19 @@ def set_render_parameters(scene, settings, filepath, context):
         scene.frame_start=settings.frame_range_in
         scene.frame_end=settings.frame_range_out
 
+    space_3d=context.area.spaces[0]
     # Shading
-    if settings.render_type!="FULL":
-        if settings.render_engine=="BLENDER_EEVEE":
-            context.area.spaces[0].shading.type="MATERIAL"
-        elif settings.render_engine=="BLENDER_WORKBENCH":
-            context.area.spaces[0].shading.type="SOLID"
+    space_3d.shading.type=settings.shading
+
+    # Region 3d
+    if not settings.use_3dviewport:
+        space_3d.region_3d.view_perspective="CAMERA"
+
+    # Overlay
+    space_3d.overlay.show_overlays=settings.show_overlays
 
     # Render
     rd = scene.render
-    rd.engine=settings.render_engine
     rd.filepath=filepath
     rd.use_compositing=settings.use_compositing
     rd.use_simplify=settings.simplify
@@ -154,7 +186,7 @@ def set_render_parameters(scene, settings, filepath, context):
 
     # EEVEE
     eevee=scene.eevee
-    eevee.taa_render_samples = settings.eevee_samples
+    eevee.taa_samples = settings.eevee_samples
     eevee.use_gtao = settings.eevee_ambient_occlusion
 
 def play_video_external(video_filepath):
@@ -173,13 +205,14 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return True
+        props = context.scene.playblaster_properties
+        return props.playblast_index in range(0, len(props.playblasts))
 
     def execute(self, context):
         scn = context.scene
         props = scn.playblaster_properties
         active = props.playblasts[props.playblast_index]
-        fp = return_filepath()
+        fp = return_filepath(active)
 
         # Render settings
         datas = store_parameters(scn, context)
@@ -190,18 +223,13 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
             bpy.ops.render.opengl(
                 animation=True, 
                 render_keyed_only=False, 
-                view_context=active.use_3dviewport,
+                view_context=True,
             )
         elif active.render_type=="OPENGLKEY":
             bpy.ops.render.opengl(
                 animation=True,
                 render_keyed_only=True,
-                view_context=active.use_3dviewport,
-            )
-        elif active.render_type=="FULL":
-            bpy.ops.render.render(
-                animation=True,
-                use_viewport=active.use_3dviewport,
+                view_context=True,
             )
 
         active.rendered_filepath=scn.render.frame_path()

@@ -1,5 +1,9 @@
 import bpy
+import random
 
+
+def generate_random():
+    return(str(random.randrange(0,99999)).zfill(5))
 
 class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
     bl_idname = "playblaster.manage_actions"
@@ -17,12 +21,16 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
         return True
 
     def execute(self, context):
-        props = context.scene.playblaster_properties
+        scn=context.scene
+        props = scn.playblaster_properties
         playblasts = props.playblasts
 
         if self.action=="ADD":
             new_playblast=playblasts.add()
             new_playblast.name="New Playblast"
+            new_playblast.frame_range_in=scn.frame_start
+            new_playblast.frame_range_out=scn.frame_end
+            new_playblast.hash=generate_random()
             props.playblast_index=len(playblasts)-1
 
         elif self.action=="REMOVE":

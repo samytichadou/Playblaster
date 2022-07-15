@@ -7,17 +7,18 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
         name = "Render Type",
         default = 'OPENGL',
         items = (
-        ('FULL', "Classic Render", ""),
         ('OPENGL', "Open GL", ""),
         ('OPENGLKEY', "Open GL Keyed", ""),
         ),
     )
-    render_engine: bpy.props.EnumProperty(
-        name = "Engine",
-        default = 'BLENDER_EEVEE',
+    shading: bpy.props.EnumProperty(
+        name = "Shading Type",
+        default = 'MATERIAL',
         items = (
-        ('BLENDER_WORKBENCH', "Workbench", ""),
-        ('BLENDER_EEVEE', "EEVEE", ""),
+        ('WIREFRAME', "Wireframe", ""),
+        ('SOLID', "Solid", ""),
+        ('MATERIAL', "Material", ""),
+        ('RENDERED', "Rendered", ""),
         ),
     )
 
@@ -27,6 +28,8 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     simplify: bpy.props.BoolProperty(name = "Simplify", default = True)
     simplify_subdivision: bpy.props.IntProperty(name = "Max Subdivision", default = 0, min = 0, max = 6)
     simplify_particles: bpy.props.FloatProperty(name = "Max Child Particles", default = 0, min = 0, max = 1)
+
+    show_overlays: bpy.props.BoolProperty(name = "Show Overlays")
 
     # Output
     resolution_percentage: bpy.props.IntProperty(name = "Resolution Percentage", default = 50, min = 1, max = 100)
@@ -55,6 +58,7 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     )
 
     rendered_filepath: bpy.props.StringProperty()
+    hash: bpy.props.StringProperty()
 
 
 class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):
