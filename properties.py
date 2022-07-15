@@ -21,7 +21,14 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
         ('RENDERED', "Rendered", ""),
         ),
     )
-
+    preselection: bpy.props.EnumProperty(
+        name = "Pre Selection",
+        default = 'ALL',
+        items = (
+        ('ALL', "All", ""),
+        ('NONE', "None", ""),
+        ),
+    )
     eevee_samples: bpy.props.IntProperty(name = "EEVEE Samples", default = 8, min = 4, max = 128)
     eevee_ambient_occlusion: bpy.props.BoolProperty(name = "EEVEE AO", default = False)
     

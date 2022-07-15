@@ -64,6 +64,10 @@ class PLAYBLASTER_PT_playblast_render_settings_sub(bpy.types.Panel):
 
         col=layout.column(align=True)
         col.prop(active, "render_type", text="Type")
+        sub=col.row()
+        if active.render_type!="OPENGLKEY":
+            sub.enabled=False
+        sub.prop(active, "preselection")
         col.prop(active, "shading", text="Shading")
         col.separator()
         col.prop(active, "eevee_samples")

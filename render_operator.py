@@ -197,6 +197,19 @@ def play_video_external(video_filepath):
     else:                                   # linux variants
         subprocess.call(('xdg-open', video_filepath))
 
+def preselect_objects(context, settings):
+    old_selection=context.selected_objects
+    if settings.preselection=="ALL":
+        for ob in context.scene.objects:
+            ob.select_set(True)
+    return old_selection
+
+def restore_selection(context, old_selection):
+    for ob in context.scene.objects:
+        if ob in old_selection:
+            ob.select_set(True)
+        else:
+            ob.select_set(False)
 
 class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
     bl_idname = "playblaster.render_playblast"
@@ -216,6 +229,8 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
 
         # Render settings
         datas = store_parameters(scn, context)
+        if active.render_type=="OPENGLKEY" and active.preselection!="NONE":
+            old_selection=preselect_objects(context, active)
         set_render_parameters(scn, active, fp, context)
 
         # Render
@@ -240,7 +255,10 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
         elif active.end_action=="PLAYBLENDER":
             bpy.ops.render.play_rendered_anim()
 
+        # Restore parameters
         restore_parameters(datas, scn, context)
+        if active.render_type=="OPENGLKEY" and active.preselection!="NONE":
+            restore_selection(context, old_selection)
 
         return {'FINISHED'}
 
