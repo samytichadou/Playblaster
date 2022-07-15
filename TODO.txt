@@ -5,3 +5,5 @@
 - incremental playblast
 - play rendered op
 - remove file
+- save as json
+- load json
