@@ -7,4 +7,3 @@
 - remove file
 - save as json
 - load json
-- restore current frame

@@ -9,6 +9,7 @@ list_scene = (
     "frame_start",
     "frame_end",
     "use_preview_range",
+    "frame_current"
 )
 
 list_render = (
