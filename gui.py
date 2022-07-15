@@ -25,13 +25,16 @@ class PLAYBLASTER_PT_playblast(bpy.types.Panel):
 
     @classmethod
     def poll(cls, context):
-        return bpy.data.is_saved
+        return True
 
     def draw(self, context):
         props = context.scene.playblaster_properties
         playblasts = props.playblasts
 
         layout = self.layout
+
+        if not bpy.data.is_saved:
+            layout.label(text="Blend file is not saved", icon="INFO")
 
         row=layout.row(align=False)
         row.template_list("PLAYBLASTER_UL_playblasts", "", props, "playblasts", props, "playblast_index", rows=4)

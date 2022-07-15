@@ -18,7 +18,7 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return True
+        return bpy.data.is_saved
 
     def execute(self, context):
         scn=context.scene

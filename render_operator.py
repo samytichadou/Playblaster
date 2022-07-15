@@ -220,7 +220,7 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         props = context.scene.playblaster_properties
-        return props.playblast_index in range(0, len(props.playblasts))
+        return props.playblast_index in range(0, len(props.playblasts)) and bpy.data.is_saved
 
     def execute(self, context):
         scn = context.scene
