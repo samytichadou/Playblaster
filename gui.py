@@ -120,6 +120,7 @@ class PLAYBLASTER_PT_playblast_output_settings_sub(bpy.types.Panel):
         col.prop(active, "use_3dviewport")
         col.separator()
         col.prop(active, "end_action")
+        col.prop(active, "player")
 
 
 ### REGISTER ---

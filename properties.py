@@ -59,8 +59,17 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
         default = 'PLAY',
         items = (
         ('PLAY', "Play Video", ""),
-        ('PLAYBLENDER', "Play Video in Blender Player", ""),
         ('NOTHING', "Do Nothing", ""),
+        ),
+    )
+
+    player: bpy.props.EnumProperty(
+        name = "Player",
+        default = 'DEFAULT',
+        items = (
+        ('DEFAULT', "Default Player", ""),
+        ('BLENDER', "Blender Player", ""),
+        #('SPECIFIC', "Specific Player", ""),
         ),
     )
 

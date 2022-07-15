@@ -252,9 +252,10 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
 
         # End Action
         if active.end_action=="PLAY":
-            play_video_external(scn.render.frame_path())
-        elif active.end_action=="PLAYBLENDER":
-            bpy.ops.render.play_rendered_anim()
+            if active.player=="DEFAULT":
+                play_video_external(scn.render.frame_path())
+            elif active.player=="BLENDER":
+                bpy.ops.render.play_rendered_anim()
 
         # Restore parameters
         restore_parameters(datas, scn, context)
