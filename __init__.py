@@ -36,27 +36,21 @@ bl_info = {
 from . import (
     addon_preferences,
     properties,
-    render_operator,
-    modal_check,
-    set_preferences_operator,
-    play_rendered_operator,
     gui,
+    manage_playblasts_operator,
+    render_operator,
 )
 
 def register():
     properties.register()
-    render_operator.register()
     addon_preferences.register()
-    modal_check.register()
-    set_preferences_operator.register()
-    play_rendered_operator.register()
     gui.register()
+    manage_playblasts_operator.register()
+    render_operator.register()
 
 def unregister():
     properties.unregister()
-    render_operator.unregister()
     addon_preferences.unregister()
-    modal_check.unregister()
-    set_preferences_operator.unregister()
-    play_rendered_operator.unregister()
     gui.unregister()
+    manage_playblasts_operator.unregister()
+    render_operator.unregister()
