@@ -221,7 +221,7 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
     
     @classmethod
     def poll(cls, context):
-        return bpy.data.is_saved
+        return bpy.data.is_saved and len(context.scene.playblaster_properties.playblasts)!=0
 
     def execute(self, context):
         scn = context.scene

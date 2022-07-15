@@ -2,20 +2,52 @@ import bpy
 
 
 def view_header_gui(self, context):
-    self.layout.operator('playblaster.render_playblast', text="", icon= 'FILE_MOVIE')
+    props = context.scene.playblaster_properties
+    playblasts = props.playblasts
+    row=self.layout.row(align=True)
+    row.operator('playblaster.render_playblast', text="", icon= 'FILE_MOVIE').index=playblasts[props.playblast_index].index
+    row.popover(panel="PLAYBLASTER_PT_playblasts_popover", text="")
 
+def draw_entry_playblast_viewer(container, playblast):
+    row=container.row(align=True)
+    row.prop(playblast, "name", text="", emboss=False)
+    row.operator("playblaster.render_playblast", text="", icon="FILE_MOVIE", emboss=False).index=playblast.index
+    sub=row.row(align=True)
+    if not playblast.rendered_filepath:
+        sub.enabled=False
+    sub.operator("playblaster.play_playblast", text="", icon="PLAY", emboss=False).index=playblast.index
+
+class PLAYBLASTER_PT_playblasts_popover(bpy.types.Panel):
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'HEADER'
+    bl_label = "Playblasts"
+    bl_ui_units_x = 8
+
+    @classmethod
+    def poll(cls, context):
+        return len(context.scene.playblaster_properties.playblasts)!=0
+
+    def draw(self, context):
+        props = context.scene.playblaster_properties
+        playblasts = props.playblasts
+
+        layout = self.layout
+        col=layout.column(align=True)
+
+        for p in playblasts:
+            draw_entry_playblast_viewer(col, p)
 
 class PLAYBLASTER_UL_playblasts(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
-        layout.prop(item, "name", text="", emboss=False)
-        row=layout.row(align=True)
-        row.operator("playblaster.render_playblast", text="", icon="FILE_MOVIE", emboss=False).index=item.index
-        sub=row.row(align=True)
-        if not item.rendered_filepath:
-            sub.enabled=False
-        sub.operator("playblaster.play_playblast", text="", icon="PLAY", emboss=False).index=item.index
+        draw_entry_playblast_viewer(layout, item)
+        # layout.prop(item, "name", text="", emboss=False)
+        # row=layout.row(align=True)
+        # row.operator("playblaster.render_playblast", text="", icon="FILE_MOVIE", emboss=False).index=item.index
+        # sub=row.row(align=True)
+        # if not item.rendered_filepath:
+        #     sub.enabled=False
+        # sub.operator("playblaster.play_playblast", text="", icon="PLAY", emboss=False).index=item.index
         # sub.label(text="", icon="X")
-
 
 class PLAYBLASTER_PT_playblast(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
@@ -44,7 +76,6 @@ class PLAYBLASTER_PT_playblast(bpy.types.Panel):
         subcol.separator()
         subcol.operator("playblaster.manage_actions",text="",icon="TRIA_UP").action="UP"
         subcol.operator("playblaster.manage_actions",text="",icon="TRIA_DOWN").action="DOWN"
-
 
 class PLAYBLASTER_PT_playblast_render_settings_sub(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
@@ -86,7 +117,6 @@ class PLAYBLASTER_PT_playblast_render_settings_sub(bpy.types.Panel):
         subcol.prop(active, "simplify_subdivision")
         subcol.prop(active, "simplify_particles")
 
-
 class PLAYBLASTER_PT_playblast_output_settings_sub(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -126,6 +156,7 @@ class PLAYBLASTER_PT_playblast_output_settings_sub(bpy.types.Panel):
 ### REGISTER ---
 def register():
     bpy.types.VIEW3D_HT_header.append(view_header_gui)
+    bpy.utils.register_class(PLAYBLASTER_PT_playblasts_popover)
     bpy.utils.register_class(PLAYBLASTER_UL_playblasts)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast_render_settings_sub)
@@ -133,6 +164,7 @@ def register():
 
 def unregister():
     bpy.types.VIEW3D_HT_header.remove(view_header_gui)
+    bpy.utils.unregister_class(PLAYBLASTER_PT_playblasts_popover)
     bpy.utils.unregister_class(PLAYBLASTER_UL_playblasts)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_render_settings_sub)
