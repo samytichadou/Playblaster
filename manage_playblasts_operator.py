@@ -1,24 +1,52 @@
 import bpy
 import random
+import os
 
+from .render_operator import return_filepath
 
 def generate_random():
     return(str(random.randrange(0,99999)).zfill(5))
+
+def get_files_by_pattern(pattern, folder):
+    file_list=[]
+    for f in os.listdir(folder):
+        if f.startswith(pattern):
+            file_list.append(os.path.join(folder, f))
+    return file_list
+
+def delete_file(filepath) :
+    try:
+        if os.path.isfile(filepath) :
+            os.remove(filepath)
+            return True
+    except PermissionError:
+        return False
 
 class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
     bl_idname = "playblaster.manage_actions"
     bl_label = "Manage Playblasts"
 
-    action : bpy.props.EnumProperty(items=(
+    action: bpy.props.EnumProperty(items=(
         ('UP', 'Up', ""),
         ('DOWN', 'Down', ""),
         ('ADD', 'Add', ""),
         ('REMOVE', 'Remove', ""),
         ))
+    remove_files: bpy.props.BoolProperty(name="Remove associated playblasts")
 
     @classmethod
     def poll(cls, context):
         return bpy.data.is_saved
+
+    def invoke(self, context, event):
+        if self.action=='REMOVE':
+            self.remove_files=False
+            return context.window_manager.invoke_props_dialog(self)
+        return self.execute(context)
+ 
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "remove_files")
 
     def execute(self, context):
         scn=context.scene
@@ -38,6 +66,13 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
         elif self.action=="REMOVE":
             if props.playblast_index<=len(playblasts)-1:
                 check_indexes=True
+
+                # remove associated
+                if self.remove_files:
+                    playblast=playblasts[props.playblast_index]
+                    for f in get_files_by_pattern(playblast.hash, os.path.dirname(return_filepath(playblast))):
+                        delete_file(f)
+
                 playblasts.remove(props.playblast_index)
                 if props.playblast_index>len(playblasts)-1:
                     props.playblast_index-=1
