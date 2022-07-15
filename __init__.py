@@ -39,6 +39,7 @@ from . import (
     gui,
     manage_playblasts_operator,
     render_operator,
+    play_operator,
 )
 
 def register():
@@ -47,6 +48,7 @@ def register():
     gui.register()
     manage_playblasts_operator.register()
     render_operator.register()
+    play_operator.register()
 
 def unregister():
     properties.unregister()
@@ -54,3 +56,4 @@ def unregister():
     gui.unregister()
     manage_playblasts_operator.unregister()
     render_operator.unregister()
+    play_operator.unregister()
