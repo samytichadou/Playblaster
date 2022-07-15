@@ -262,6 +262,8 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
         if active.render_type=="OPENGLKEY" and active.preselection!="NONE":
             restore_selection(context, old_selection)
 
+        self.report({'INFO'}, "Playblast Done")
+
         return {'FINISHED'}
 
 
