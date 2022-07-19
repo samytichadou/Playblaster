@@ -5,10 +5,11 @@ def view_header_gui(self, context):
     props = context.scene.playblaster_properties
     playblasts = props.playblasts
     row=self.layout.row(align=True)
-    if props.playblast_index in range(0, len(props.playblasts)):
+    if props.playblast_index in range(0, len(props.playblasts)) and len(props.playblast)!=0:
         index=playblasts[props.playblast_index].index
     else:
         index=-1
+        row.enabled=False
     row.operator('playblaster.render_playblast', text="", icon= 'FILE_MOVIE').index=index
     row.popover(panel="PLAYBLASTER_PT_playblasts_popover", text="")
 
