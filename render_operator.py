@@ -227,7 +227,7 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
         scn = context.scene
         props = scn.playblaster_properties
 
-        if self.index not in range(0, len(props.playblasts)):
+        if self.index==-1 or self.index not in range(0, len(props.playblasts)):
             self.report({'WARNING'}, "Playblast not existing")
             return {'FINISHED'}
 
