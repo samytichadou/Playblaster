@@ -5,7 +5,7 @@ def view_header_gui(self, context):
     props = context.scene.playblaster_properties
     playblasts = props.playblasts
     row=self.layout.row(align=True)
-    if props.playblast_index in range(0, len(props.playblasts)) and len(props.playblast)!=0:
+    if props.playblast_index in range(0, len(props.playblasts)) and len(props.playblasts)!=0:
         index=playblasts[props.playblast_index].index
     else:
         index=-1
