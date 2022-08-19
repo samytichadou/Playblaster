@@ -177,16 +177,21 @@ class PLAYBLASTER_PT_playblast_metadata_settings_sub(bpy.types.Panel):
     def draw_header(self, context):
         props = context.scene.playblaster_properties
         active = props.playblasts[props.playblast_index]
-        self.layout.prop(active, "use_metadata", text="")
+        self.layout.prop(active, "use_stamp", text="")
 
     def draw(self, context):
         props = context.scene.playblaster_properties
         active = props.playblasts[props.playblast_index]
 
         layout = self.layout
-        layout.active = active.use_metadata
+        layout.active = active.use_stamp
 
         col = layout.column(align=True)
+        col.prop(active, "stamp_font_size", text="Font Size")
+        col.prop(active, "use_stamp_labels", text="Include Labels")
+        
+        box=layout.box()
+        col=box.column(align=True)
         col.prop(active, "use_stamp_date")
         col.prop(active, "use_stamp_time")
         col.prop(active, "use_stamp_render_time")
@@ -203,7 +208,7 @@ class PLAYBLASTER_PT_playblast_metadata_settings_sub(bpy.types.Panel):
         row.prop(active, "use_stamp_note", text="")
         sub=row.row(align=True)
         sub.enabled = active.use_stamp_note
-        sub.prop(active, "custom_note", text="")
+        sub.prop(active, "stamp_note_text", text="")
 
 class PLAYBLASTER_PT_playblast_infos_sub(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'

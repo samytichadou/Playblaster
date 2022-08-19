@@ -78,7 +78,10 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     index: bpy.props.IntProperty()
 
     # Metadata
-    use_metadata: bpy.props.BoolProperty(name = "Metadata", default = False)
+    stamp_font_size: bpy.props.IntProperty(name = "Font Size", default=12, min=8, max=64, subtype='PIXEL')
+    use_stamp_labels: bpy.props.BoolProperty(name = "Include Labels", default = True)
+
+    use_stamp: bpy.props.BoolProperty(name = "Metadata", default = False)
     use_stamp_date: bpy.props.BoolProperty(name = "Date", default = True)
     use_stamp_time: bpy.props.BoolProperty(name = "Timecode", default = True)
     use_stamp_render_time: bpy.props.BoolProperty(name = "Render Time", default = False)
@@ -92,7 +95,7 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     use_stamp_marker: bpy.props.BoolProperty(name = "Marker", default = False)
     use_stamp_filename: bpy.props.BoolProperty(name = "Filename", default = True)
     use_stamp_note: bpy.props.BoolProperty(name = "Note", default = False)
-    custom_note: bpy.props.StringProperty(name = "Note", default = "Note")
+    stamp_note_text: bpy.props.StringProperty(name = "Note", default = "Note")
 
 
 class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):
