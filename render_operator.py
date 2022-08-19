@@ -146,8 +146,10 @@ def return_filepath(playblast):
 
 def set_render_parameters(scene, settings, filepath, context):
     # Scene
+    scene.use_preview_range=False
     if settings.frame_range_type=='PREVIEW':
-        scene.use_preview_range=True
+        scene.frame_start=scene.frame_preview_start
+        scene.frame_end=scene.frame_preview_end
     elif settings.frame_range_type=='OVERRIDE':
         scene.frame_start=settings.frame_range_in
         scene.frame_end=settings.frame_range_out
