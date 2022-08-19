@@ -161,6 +161,50 @@ class PLAYBLASTER_PT_playblast_output_settings_sub(bpy.types.Panel):
         col.prop(active, "end_action")
         col.prop(active, "player")
 
+class PLAYBLASTER_PT_playblast_metadata_settings_sub(bpy.types.Panel):
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_parent_id = "PLAYBLASTER_PT_playblast"
+    bl_label = "Metadata"
+    bl_options = {'DEFAULT_CLOSED'}
+
+    @classmethod
+    def poll(cls, context):
+        props = context.scene.playblaster_properties
+        playblasts = props.playblasts
+        return props.playblast_index in range(0,len(playblasts))
+
+    def draw_header(self, context):
+        props = context.scene.playblaster_properties
+        active = props.playblasts[props.playblast_index]
+        self.layout.prop(active, "use_metadata", text="")
+
+    def draw(self, context):
+        props = context.scene.playblaster_properties
+        active = props.playblasts[props.playblast_index]
+
+        layout = self.layout
+        layout.active = active.use_metadata
+
+        col = layout.column(align=True)
+        col.prop(active, "use_stamp_date")
+        col.prop(active, "use_stamp_time")
+        col.prop(active, "use_stamp_render_time")
+        col.prop(active, "use_stamp_frame")
+        col.prop(active, "use_stamp_frame_range")
+        col.prop(active, "use_stamp_memory")
+        col.prop(active, "use_stamp_hostname")
+        col.prop(active, "use_stamp_camera")
+        col.prop(active, "use_stamp_lens")
+        col.prop(active, "use_stamp_scene")
+        col.prop(active, "use_stamp_marker")
+        col.prop(active, "use_stamp_filename")
+        row=col.row(align=True)
+        row.prop(active, "use_stamp_note", text="")
+        sub=row.row(align=True)
+        sub.enabled = active.use_stamp_note
+        sub.prop(active, "custom_note", text="")
+
 class PLAYBLASTER_PT_playblast_infos_sub(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -194,6 +238,7 @@ def register():
     bpy.utils.register_class(PLAYBLASTER_PT_playblast)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast_render_settings_sub)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast_output_settings_sub)
+    bpy.utils.register_class(PLAYBLASTER_PT_playblast_metadata_settings_sub)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast_infos_sub)
 
 def unregister():
@@ -203,4 +248,5 @@ def unregister():
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_render_settings_sub)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_output_settings_sub)
+    bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_metadata_settings_sub)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_infos_sub)

@@ -77,6 +77,23 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     hash: bpy.props.StringProperty()
     index: bpy.props.IntProperty()
 
+    # Metadata
+    use_metadata: bpy.props.BoolProperty(name = "Metadata", default = False)
+    use_stamp_date: bpy.props.BoolProperty(name = "Date", default = True)
+    use_stamp_time: bpy.props.BoolProperty(name = "Timecode", default = True)
+    use_stamp_render_time: bpy.props.BoolProperty(name = "Render Time", default = False)
+    use_stamp_frame: bpy.props.BoolProperty(name = "Frame", default = True)
+    use_stamp_frame_range: bpy.props.BoolProperty(name = "Frame Range", default = False)
+    use_stamp_memory: bpy.props.BoolProperty(name = "Memory", default = False)
+    use_stamp_hostname: bpy.props.BoolProperty(name = "Hostname", default = False)
+    use_stamp_camera: bpy.props.BoolProperty(name = "Camera", default = False)
+    use_stamp_lens: bpy.props.BoolProperty(name = "Lens", default = False)
+    use_stamp_scene: bpy.props.BoolProperty(name = "Scene", default = False)
+    use_stamp_marker: bpy.props.BoolProperty(name = "Marker", default = False)
+    use_stamp_filename: bpy.props.BoolProperty(name = "Filename", default = True)
+    use_stamp_note: bpy.props.BoolProperty(name = "Note", default = False)
+    custom_note: bpy.props.StringProperty(name = "Note", default = "Note")
+
 
 class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):
     playblasts: bpy.props.CollectionProperty(type = PLAYBLASTER_PR_playblast_settings, name="Playblast Settings")
