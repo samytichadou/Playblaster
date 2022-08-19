@@ -21,7 +21,7 @@ Created by Samy Tichadou (tonton)
 bl_info = {
  "name": "Playblaster",
  "author": "Samy Tichadou (tonton)",
- "version": (2, 0, 1),
+ "version": (2, 0, 2),
  "blender": (3, 0, 0),
  "location": "Search Menu",
  "description": "Quick Playblast of your Animation",
@@ -40,6 +40,7 @@ from . import (
     manage_playblasts_operator,
     render_operator,
     play_operator,
+    open_folder_operator,
 )
 
 def register():
@@ -49,6 +50,7 @@ def register():
     manage_playblasts_operator.register()
     render_operator.register()
     play_operator.register()
+    open_folder_operator.register()
 
 def unregister():
     properties.unregister()
@@ -57,3 +59,4 @@ def unregister():
     manage_playblasts_operator.unregister()
     render_operator.unregister()
     play_operator.unregister()
+    open_folder_operator.unregister()
