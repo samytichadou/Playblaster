@@ -25,8 +25,8 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
         name = "Select",
         default = 'ALL',
         items = (
-        ('ALL', "All", ""),
-        ('NONE', "None", ""),
+        ('ALL', "All", "Select all objects before rendering"),
+        ('NONE', "Keep Existing", "Do not select any object before rendering, keep existing selection"),
         ),
     )
     eevee_samples: bpy.props.IntProperty(name = "EEVEE Samples", default = 8, min = 4, max = 128)
