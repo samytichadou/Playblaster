@@ -1,4 +1,5 @@
 import bpy
+import os
 
 
 def view_header_gui(self, context):
@@ -160,6 +161,30 @@ class PLAYBLASTER_PT_playblast_output_settings_sub(bpy.types.Panel):
         col.prop(active, "end_action")
         col.prop(active, "player")
 
+class PLAYBLASTER_PT_playblast_infos_sub(bpy.types.Panel):
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_parent_id = "PLAYBLASTER_PT_playblast"
+    bl_label = "Informations"
+    bl_options = {'DEFAULT_CLOSED'}
+
+    @classmethod
+    def poll(cls, context):
+        props = context.scene.playblaster_properties
+        playblasts = props.playblasts
+        return props.playblast_index in range(0,len(playblasts))
+
+    def draw(self, context):
+        props = context.scene.playblaster_properties
+        active = props.playblasts[props.playblast_index]
+
+        layout = self.layout
+
+        col=layout.column(align=True)
+        col.label(text="Name : %s" % os.path.basename(active.rendered_filepath))
+        col.label(text="Path : %s" % active.rendered_filepath)
+        col.label(text="Hash : %s" % active.hash)
+
 
 ### REGISTER ---
 def register():
@@ -169,6 +194,7 @@ def register():
     bpy.utils.register_class(PLAYBLASTER_PT_playblast)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast_render_settings_sub)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast_output_settings_sub)
+    bpy.utils.register_class(PLAYBLASTER_PT_playblast_infos_sub)
 
 def unregister():
     bpy.types.VIEW3D_HT_header.remove(view_header_gui)
@@ -177,3 +203,4 @@ def unregister():
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_render_settings_sub)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_output_settings_sub)
+    bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_infos_sub)
