@@ -74,6 +74,9 @@ class PLAYBLASTER_PT_playblast(bpy.types.Panel):
             layout.label(text="Blend file is not saved", icon="INFO")
 
         row=layout.row(align=False)
+        row.operator("playblaster.open_playblast_folder",icon="FILE_FOLDER")
+
+        row=layout.row(align=False)
         row.template_list("PLAYBLASTER_UL_playblasts", "", props, "playblasts", props, "playblast_index", rows=4)
         subcol=row.column(align=True)
         subcol.operator("playblaster.manage_actions",text="",icon="ADD").action="ADD"
