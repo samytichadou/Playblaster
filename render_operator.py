@@ -63,12 +63,23 @@ list_shading = (
 )
 
 list_region3d = (
+    "view_distance",
+    "view_location",
+    "view_rotation",
     "view_perspective",
-    "view_matrix",
+
+    # "view_matrix",
+    # "view_camera_offset",
+    # "view_camera_zoom",
+    #"window_matrix",
 )
 
 list_overlay = (
     "show_overlays",
+)
+
+list_preferences_view = (
+    "render_display_type",
 )
 
 def store_parameters(scene, context):
@@ -109,6 +120,11 @@ def store_parameters(scene, context):
     for p in list_overlay:
         datas[p] = getattr(overlay, p)
 
+    # Preferences
+    pref_view=context.preferences.view
+    for p in list_preferences_view:
+        datas[p] = getattr(pref_view, p)
+
     return datas
 
 def restore_parameters(datas, scene, context):
@@ -146,6 +162,11 @@ def restore_parameters(datas, scene, context):
     overlay=context.area.spaces[0].overlay
     for p in list_overlay:
         setattr(overlay, p, datas[p])
+
+    # Preferences
+    pref_view=context.preferences.view
+    for p in list_preferences_view:
+        setattr(pref_view, p, datas[p])
 
 def return_filepath(playblast):
     prefs=get_addon_preferences()
@@ -228,6 +249,9 @@ def set_render_parameters(scene, settings, filepath, context):
     eevee.taa_samples = settings.eevee_samples
     eevee.use_gtao = settings.eevee_ambient_occlusion
 
+    # Preferences
+    context.preferences.view.render_display_type="NONE"
+
 def play_video_external(video_filepath):
     if platform.system() == 'Darwin':       # macOS
         subprocess.call(('open', video_filepath))
@@ -250,6 +274,25 @@ def restore_selection(context, old_selection):
         else:
             ob.select_set(False)
 
+
+
+datas={}
+old_selection=None
+keyed=False
+index=0
+
+# Macro operator to concatenate transform and our finalization
+class PLAYBLASTER_OT_render_macro(bpy.types.Macro):
+    bl_idname = "playblaster.render_macro"
+    bl_label = "Render Macro"
+    bl_options = {"INTERNAL"}
+
+class PLAYBLASTER_OT_render_keyed_macro(bpy.types.Macro):
+    bl_idname = "playblaster.render_keyed_macro"
+    bl_label = "Render Macro"
+    bl_options = {"INTERNAL"}
+
+
 class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
     bl_idname = "playblaster.render_playblast"
     bl_label = "Render Playblast"
@@ -269,52 +312,83 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
             self.report({'WARNING'}, "Playblast not existing")
             return {'FINISHED'}
 
+        global datas, keyed, index
+        index=self.index
         active = props.playblasts[self.index]
         fp = return_filepath(active)
 
         # Render settings
         datas = store_parameters(scn, context)
         if active.render_type=="OPENGLKEY" and active.preselection!="NONE":
+            global old_selection
             old_selection=preselect_objects(context, active)
         set_render_parameters(scn, active, fp, context)
 
-        # Render
+        props._is_rendering=True
+
         if active.render_type=="OPENGL":
-            bpy.ops.render.opengl(
-                animation=True, 
-                render_keyed_only=False, 
-                view_context=True,
-            )
-        elif active.render_type=="OPENGLKEY":
-            bpy.ops.render.opengl(
-                animation=True,
-                render_keyed_only=True,
-                view_context=True,
-            )
+            bpy.ops.playblaster.render_macro('INVOKE_DEFAULT')
+        else:
+            bpy.ops.playblaster.render_keyed_macro('INVOKE_DEFAULT')
 
+        return {'FINISHED'}
+
+class PLAYBLASTER_OT_render_playblast_postactions(bpy.types.Operator):
+    bl_idname = "playblaster.render_playblast_postactions"
+    bl_label = "Render Playblast Post Actions"
+    bl_options = {"INTERNAL"}
+
+    def execute(self, context):
+        scn = context.scene
+        props = scn.playblaster_properties
+
+        props.is_rendering=False
+
+        active = props.playblasts[index]
         active.rendered_filepath=scn.render.frame_path()
-
         # End Action
-        if active.end_action=="PLAY":
-            if active.player=="DEFAULT":
-                play_video_external(scn.render.frame_path())
-            elif active.player=="BLENDER":
-                bpy.ops.render.play_rendered_anim()
+        if not props.is_cancelling:
+            if active.end_action=="PLAY":
+                if active.player=="DEFAULT":
+                    play_video_external(scn.render.frame_path())
+                elif active.player=="BLENDER":
+                    bpy.ops.render.play_rendered_anim()
 
         # Restore parameters
         restore_parameters(datas, scn, context)
         if active.render_type=="OPENGLKEY" and active.preselection!="NONE":
             restore_selection(context, old_selection)
+        props.is_cancelling=False
 
         self.report({'INFO'}, "Playblast Done")
 
         return {'FINISHED'}
 
-
 ### REGISTER ---
 
 def register():
+    bpy.utils.register_class(PLAYBLASTER_OT_render_macro)
+    bpy.utils.register_class(PLAYBLASTER_OT_render_keyed_macro)
     bpy.utils.register_class(PLAYBLASTER_OT_render_playblast)
+    bpy.utils.register_class(PLAYBLASTER_OT_render_playblast_postactions)
+
+    # Define macros
+    # Non Keyed
+    action=PLAYBLASTER_OT_render_macro.define("RENDER_OT_opengl")
+    action.properties.animation=True
+    action.properties.view_context=True
+    action.properties.render_keyed_only=False
+    PLAYBLASTER_OT_render_macro.define("PLAYBLASTER_OT_render_playblast_postactions")
+    # Keyed
+    action=PLAYBLASTER_OT_render_keyed_macro.define("RENDER_OT_opengl")
+    action.properties.animation=True
+    action.properties.view_context=True
+    action.properties.render_keyed_only=True
+    PLAYBLASTER_OT_render_keyed_macro.define("PLAYBLASTER_OT_render_playblast_postactions")
+
 
 def unregister():
+    bpy.utils.unregister_class(PLAYBLASTER_OT_render_macro)
+    bpy.utils.unregister_class(PLAYBLASTER_OT_render_keyed_macro)
     bpy.utils.unregister_class(PLAYBLASTER_OT_render_playblast)
+    bpy.utils.unregister_class(PLAYBLASTER_OT_render_playblast_postactions)

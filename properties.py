@@ -101,7 +101,9 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
 class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):
     playblasts: bpy.props.CollectionProperty(type = PLAYBLASTER_PR_playblast_settings, name="Playblast Settings")
     playblast_index: bpy.props.IntProperty(default = -1, min = -1)
-
+    
+    is_rendering: bpy.props.BoolProperty()
+    is_cancelling: bpy.props.BoolProperty()
 
 ### REGISTER ---
 def register():
