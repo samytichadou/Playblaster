@@ -263,12 +263,12 @@ def play_video_external(video_filepath):
 def preselect_objects(context, settings):
     old_selection=context.selected_objects
     if settings.preselection=="ALL":
-        for ob in context.scene.objects:
+        for ob in context.view_layer.objects:
             ob.select_set(True)
     return old_selection
 
 def restore_selection(context, old_selection):
-    for ob in context.scene.objects:
+    for ob in context.view_layer.objects:
         if ob in old_selection:
             ob.select_set(True)
         else:
