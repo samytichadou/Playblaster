@@ -1,7 +1,9 @@
-- handler startup pour vérif fichiers
-- refresh fichiers operators
-- datetime rendered
-- incremental playblast
-- save as json
-- load json
-- header menu to render other playblasts
+[ ] datetime in filename (optional)
+[ ] no overwrite playblast (optional)
+[ ] handler startup pour vérif fichiers
+[ ] refresh fichiers operators
+[ ] incremental playblast
+[ ] save as json
+[ ] load json
+[ ] header menu to render other playblasts
+[ ] reset correctly 3D viewport used for rendering
