@@ -1,4 +1,4 @@
-[ ] datetime in filename (optional)
+[ ] timestamp in filename (optional)
 [ ] no overwrite playblast (optional)
 [ ] handler startup pour vérif fichiers
 [ ] refresh fichiers operators
@@ -7,3 +7,4 @@
 [ ] load json
 [ ] header menu to render other playblasts
 [ ] reset correctly 3D viewport used for rendering
+[ ] remove media files
