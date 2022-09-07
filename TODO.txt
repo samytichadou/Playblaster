@@ -1,7 +1,7 @@
 [X] timestamp in filename (optional)
 [X] version playblast (optional)
 [X] incremental playblast
-[ ] add UI file settings subpanel
+[X] add UI file settings subpanel
 [ ] handler startup pour vérif fichiers
 [ ] refresh fichiers operators
 [ ] save as json
@@ -9,3 +9,4 @@
 [ ] header menu to render other playblasts
 [ ] reset correctly 3D viewport used for rendering
 [ ] remove media files operator
+[ ] if manual versioning, play operator with proper version
