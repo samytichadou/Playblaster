@@ -159,7 +159,11 @@ class PLAYBLASTER_PT_playblast_output_settings_sub(bpy.types.Panel):
         col.prop(active, "use_compositing")
         col.separator()
         col.prop(active, "include_timestamp")
-        col.prop(active, "use_versions")
+        row=col.row()
+        row.prop(active, "use_versions")
+        sub=row.row()
+        sub.enabled=active.use_versions
+        sub.prop(active, "version", text="")
         col.separator()
         col.prop(active, "end_action")
         col.prop(active, "player")

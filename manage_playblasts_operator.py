@@ -2,17 +2,11 @@ import bpy
 import random
 import os
 
-from .render_operator import return_filepath, delete_file
+from . import render_operator as ro 
+
 
 def generate_random():
     return(str(random.randrange(0,99999)).zfill(5))
-
-def get_files_by_pattern(pattern, folder):
-    file_list=[]
-    for f in os.listdir(folder):
-        if pattern in f:
-            file_list.append(os.path.join(folder, f))
-    return file_list
 
 
 class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
@@ -63,8 +57,8 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
                 # remove associated
                 if self.remove_files:
                     playblast=playblasts[props.playblast_index]
-                    for f in get_files_by_pattern(playblast.hash, os.path.dirname(return_filepath(playblast))):
-                        delete_file(f)
+                    for f in ro.get_files_by_pattern(playblast.hash, os.path.dirname(ro.return_filepath(playblast))):
+                        ro.delete_file(f)
 
                 playblasts.remove(props.playblast_index)
                 if props.playblast_index>len(playblasts)-1:

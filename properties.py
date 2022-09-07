@@ -84,6 +84,7 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     rendered_filepath: bpy.props.StringProperty()
     hash: bpy.props.StringProperty()
     index: bpy.props.IntProperty()
+    version: bpy.props.IntProperty(name="Version", min=1)
 
     # Metadata
     stamp_font_size: bpy.props.IntProperty(name = "Font Size", default=12, min=8, max=64, subtype='PIXEL')

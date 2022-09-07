@@ -182,6 +182,8 @@ def return_filepath(playblast):
     if playblast.include_timestamp:
         file_name+="%s_" % get_timestamp()
     file_name+="%s_%s_%s_" % (blend_name, playblast.name, playblast.hash)
+    if playblast.use_versions:
+        file_name+="v%s_" % str(playblast.version).zfill(3)
     if prefs.playblast_location=="ALONGSIDE":
         tmp = os.path.join(os.path.dirname(blend_fp), prefs.playblast_folder_name)
         fp_dir = os.path.join(tmp, blend_name)
@@ -293,6 +295,13 @@ def delete_file(filepath):
         print("PLAYBLASTER --- Unable to delete media file : %s" % filepath)
         return False
 
+def get_files_by_pattern(pattern, folder):
+    file_list=[]
+    for f in os.listdir(folder):
+        if pattern in f:
+            file_list.append(os.path.join(folder, f))
+    return file_list
+
 
 datas={}
 old_selection=None
@@ -336,9 +345,13 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
         fp = return_filepath(active)
 
         # Delete previous
-        if active.rendered_filepath:
+        if active.rendered_filepath and not active.use_versions:
             delete_file(active.rendered_filepath)
             active.rendered_filepath=""
+        elif active.use_versions:
+            pattern="%s_v%s_" % (active.hash, str(active.version).zfill(3))
+            for f in get_files_by_pattern(pattern, os.path.dirname(fp)):
+                delete_file(f)
 
         # Render settings
         datas = store_parameters(scn, context)
