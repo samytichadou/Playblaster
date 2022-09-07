@@ -18,8 +18,10 @@ def delete_file(filepath):
     try:
         if os.path.isfile(filepath) :
             os.remove(filepath)
+            print("PLAYBLASTER --- Removed : %s" % filepath)
             return True
     except PermissionError:
+        print("PLAYBLASTER --- Unable to delete media file : %s" % filepath)
         return False
 
 class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
@@ -71,10 +73,7 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
                 if self.remove_files:
                     playblast=playblasts[props.playblast_index]
                     for f in get_files_by_pattern(playblast.hash, os.path.dirname(return_filepath(playblast))):
-                        if not delete_file(f):
-                            print("PLAYBLASTER --- Unable to delete media file : %s" % f)
-                        else:
-                            print("PLAYBLASTER --- Removed : %s" % f)
+                        delete_file(f)
 
                 playblasts.remove(props.playblast_index)
                 if props.playblast_index>len(playblasts)-1:
