@@ -21,7 +21,7 @@ Created by Samy Tichadou (tonton)
 bl_info = {
  "name": "Playblaster",
  "author": "Samy Tichadou (tonton)",
- "version": (2, 1, 2),
+ "version": (2, 2, 0),
  "blender": (3, 0, 0),
  "location": "Search Menu",
  "description": "Quick Playblast of your Animation",
