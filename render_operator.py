@@ -172,7 +172,8 @@ def return_filepath(playblast):
     prefs=get_addon_preferences()
     blend_fp=bpy.data.filepath
     blend_name=os.path.splitext(os.path.basename(blend_fp))[0]
-    file_name="%s_%s_%s_" % (playblast.hash, playblast.name, blend_name)
+    #file_name="%s_%s_%s_" % (playblast.hash, playblast.name, blend_name)
+    file_name="%s_%s_%s_" % (blend_name, playblast.name, playblast.hash)
     if prefs.playblast_location=="ALONGSIDE":
         tmp = os.path.join(os.path.dirname(blend_fp), prefs.playblast_folder_name)
         fp_dir = os.path.join(tmp, blend_name)

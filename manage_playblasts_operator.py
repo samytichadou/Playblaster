@@ -10,11 +10,11 @@ def generate_random():
 def get_files_by_pattern(pattern, folder):
     file_list=[]
     for f in os.listdir(folder):
-        if f.startswith(pattern):
+        if pattern in f:
             file_list.append(os.path.join(folder, f))
     return file_list
 
-def delete_file(filepath) :
+def delete_file(filepath):
     try:
         if os.path.isfile(filepath) :
             os.remove(filepath)
@@ -71,7 +71,10 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
                 if self.remove_files:
                     playblast=playblasts[props.playblast_index]
                     for f in get_files_by_pattern(playblast.hash, os.path.dirname(return_filepath(playblast))):
-                        delete_file(f)
+                        if not delete_file(f):
+                            print("PLAYBLASTER --- Unable to delete media file : %s" % f)
+                        else:
+                            print("PLAYBLASTER --- Removed : %s" % f)
 
                 playblasts.remove(props.playblast_index)
                 if props.playblast_index>len(playblasts)-1:
