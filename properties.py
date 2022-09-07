@@ -53,6 +53,14 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     frame_range_out: bpy.props.IntProperty(name = "End Frame", min = 1, default = 100)
     use_compositing: bpy.props.BoolProperty(name = "Compositing", default = False)
     use_3dviewport: bpy.props.BoolProperty(name = "Use 3D View Camera", default = False)
+    include_timestamp: bpy.props.BoolProperty(
+        name = "Include Timestamp", 
+        description="Include a timestamp in the name of the playblast file",
+    )
+    use_versions: bpy.props.BoolProperty(
+        name = "Use Versions", 
+        description="Create different versions of this playblast",
+    )
 
     end_action: bpy.props.EnumProperty(
         name = "End Action",
