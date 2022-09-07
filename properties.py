@@ -65,7 +65,7 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
         name = "Manual Versioning", 
         description="Manually select versions",
     )
-    version: bpy.props.IntProperty(name="Version", min=1, max=999)
+    version: bpy.props.IntProperty(name="Version", min=1, max=999, default=1)
 
     end_action: bpy.props.EnumProperty(
         name = "End Action",

@@ -86,6 +86,39 @@ class PLAYBLASTER_PT_playblast(bpy.types.Panel):
         subcol.operator("playblaster.manage_actions",text="",icon="TRIA_UP").action="UP"
         subcol.operator("playblaster.manage_actions",text="",icon="TRIA_DOWN").action="DOWN"
 
+class PLAYBLASTER_PT_playblast_file_settings_sub(bpy.types.Panel):
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_parent_id = "PLAYBLASTER_PT_playblast"
+    bl_label = "File Settings"
+    bl_options = {'DEFAULT_CLOSED'}
+
+    @classmethod
+    def poll(cls, context):
+        props = context.scene.playblaster_properties
+        playblasts = props.playblasts
+        return props.playblast_index in range(0,len(playblasts))
+
+    def draw(self, context):
+        props = context.scene.playblaster_properties
+        active = props.playblasts[props.playblast_index]
+
+        layout = self.layout
+
+        col=layout.column(align=True)
+        col.prop(active, "include_timestamp")
+        row=col.row()
+        row.prop(active, "use_versions", text="Versions")
+        sub=row.row()
+        sub.enabled=active.use_versions
+        sub.prop(active, "manual_versions", text="Manual", toggle=True)
+        sub=sub.row()
+        sub.enabled=active.manual_versions
+        sub.prop(active, "version", text="")
+        col.separator()
+        col.prop(active, "end_action", text="End")
+        col.prop(active, "player")
+
 class PLAYBLASTER_PT_playblast_render_settings_sub(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -157,19 +190,6 @@ class PLAYBLASTER_PT_playblast_output_settings_sub(bpy.types.Panel):
         subcol.prop(active, "frame_range_out")
         col.separator()
         col.prop(active, "use_compositing")
-        col.separator()
-        col.prop(active, "include_timestamp")
-        row=col.row()
-        row.prop(active, "use_versions", text="Versions")
-        sub=row.row()
-        sub.enabled=active.use_versions
-        sub.prop(active, "manual_versions", text="Manual", toggle=True)
-        sub=sub.row()
-        sub.enabled=active.manual_versions
-        sub.prop(active, "version", text="")
-        col.separator()
-        col.prop(active, "end_action")
-        col.prop(active, "player")
 
 class PLAYBLASTER_PT_playblast_metadata_settings_sub(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
@@ -251,6 +271,7 @@ def register():
     bpy.utils.register_class(PLAYBLASTER_PT_playblasts_popover)
     bpy.utils.register_class(PLAYBLASTER_UL_playblasts)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast)
+    bpy.utils.register_class(PLAYBLASTER_PT_playblast_file_settings_sub)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast_render_settings_sub)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast_output_settings_sub)
     bpy.utils.register_class(PLAYBLASTER_PT_playblast_metadata_settings_sub)
@@ -261,6 +282,7 @@ def unregister():
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblasts_popover)
     bpy.utils.unregister_class(PLAYBLASTER_UL_playblasts)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast)
+    bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_file_settings_sub)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_render_settings_sub)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_output_settings_sub)
     bpy.utils.unregister_class(PLAYBLASTER_PT_playblast_metadata_settings_sub)
