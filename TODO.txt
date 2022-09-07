@@ -1,10 +1,11 @@
-[ ] timestamp in filename (optional)
-[ ] no overwrite playblast (optional)
+[X] timestamp in filename (optional)
+[X] version playblast (optional)
+[X] incremental playblast
+[ ] add UI file settings subpanel
 [ ] handler startup pour vérif fichiers
 [ ] refresh fichiers operators
-[ ] incremental playblast
 [ ] save as json
 [ ] load json
 [ ] header menu to render other playblasts
 [ ] reset correctly 3D viewport used for rendering
-[ ] remove media files
+[ ] remove media files operator
