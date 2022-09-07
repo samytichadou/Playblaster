@@ -302,6 +302,22 @@ def get_files_by_pattern(pattern, folder):
             file_list.append(os.path.join(folder, f))
     return file_list
 
+def get_next_version(playblast):
+    version_list=[]
+    pattern="_%s_v" % playblast.hash
+    for f in get_files_by_pattern(pattern, os.path.dirname(return_filepath(playblast))):
+        file_name=os.path.basename(f)
+        tmp=file_name.split("_%s_v" % playblast.hash)[1]
+        v=tmp.split("_")[0]
+        v=int(v)
+        if v not in version_list:
+            version_list.append(v)
+    if version_list:
+        version=max(version_list)+1
+    else:
+        version=1
+    return version
+
 
 datas={}
 old_selection=None
@@ -342,16 +358,25 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
         global datas, keyed, index
         index=self.index
         active = props.playblasts[self.index]
+
+        # Change version if needed
+        if active.use_versions and not active.manual_versions:
+            active.version=get_next_version(active)
+            print(get_next_version(active))
+        
         fp = return_filepath(active)
 
         # Delete previous
         if active.rendered_filepath and not active.use_versions:
             delete_file(active.rendered_filepath)
-            active.rendered_filepath=""
         elif active.use_versions:
-            pattern="%s_v%s_" % (active.hash, str(active.version).zfill(3))
-            for f in get_files_by_pattern(pattern, os.path.dirname(fp)):
-                delete_file(f)
+            if active.version==1:
+                if active.rendered_filepath:
+                    delete_file(active.rendered_filepath)
+            else:
+                pattern="%s_v%s_" % (active.hash, str(active.version).zfill(3))
+                for f in get_files_by_pattern(pattern, os.path.dirname(fp)):
+                    delete_file(f)
 
         # Render settings
         datas = store_parameters(scn, context)

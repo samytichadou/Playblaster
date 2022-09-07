@@ -61,6 +61,11 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
         name = "Use Versions", 
         description="Create different versions of this playblast",
     )
+    manual_versions: bpy.props.BoolProperty(
+        name = "Manual Versioning", 
+        description="Manually select versions",
+    )
+    version: bpy.props.IntProperty(name="Version", min=1, max=999)
 
     end_action: bpy.props.EnumProperty(
         name = "End Action",
@@ -84,7 +89,6 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     rendered_filepath: bpy.props.StringProperty()
     hash: bpy.props.StringProperty()
     index: bpy.props.IntProperty()
-    version: bpy.props.IntProperty(name="Version", min=1)
 
     # Metadata
     stamp_font_size: bpy.props.IntProperty(name = "Font Size", default=12, min=8, max=64, subtype='PIXEL')

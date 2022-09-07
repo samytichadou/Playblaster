@@ -160,9 +160,12 @@ class PLAYBLASTER_PT_playblast_output_settings_sub(bpy.types.Panel):
         col.separator()
         col.prop(active, "include_timestamp")
         row=col.row()
-        row.prop(active, "use_versions")
+        row.prop(active, "use_versions", text="Versions")
         sub=row.row()
         sub.enabled=active.use_versions
+        sub.prop(active, "manual_versions", text="Manual", toggle=True)
+        sub=sub.row()
+        sub.enabled=active.manual_versions
         sub.prop(active, "version", text="")
         col.separator()
         col.prop(active, "end_action")
