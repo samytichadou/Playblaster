@@ -21,19 +21,28 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
         ))
     remove_files: bpy.props.BoolProperty(name="Remove associated playblasts", default=True)
 
+    file_list=[]
+
     @classmethod
     def poll(cls, context):
         return bpy.data.is_saved
 
     def invoke(self, context, event):
         if self.action=='REMOVE':
-            self.remove_files=False
-            return context.window_manager.invoke_props_dialog(self)
+            props=context.scene.playblaster_properties
+            active=props.playblasts[props.playblast_index]
+            for f in ro.get_files_by_pattern(active.hash, os.path.dirname(ro.return_filepath(active))):
+                self.file_list.append(os.path.basename(f))
+            if self.file_list:
+                return context.window_manager.invoke_props_dialog(self, width=500)
         return self.execute(context)
  
     def draw(self, context):
         layout = self.layout
         layout.prop(self, "remove_files")
+        col=layout.column(align=True)
+        for f in self.file_list:
+            col.label(text=f)
 
     def execute(self, context):
         scn=context.scene
