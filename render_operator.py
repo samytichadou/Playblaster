@@ -283,6 +283,15 @@ def restore_selection(context, old_selection):
         else:
             ob.select_set(False)
 
+def delete_file(filepath):
+    try:
+        if os.path.isfile(filepath) :
+            os.remove(filepath)
+            print("PLAYBLASTER --- Removed : %s" % filepath)
+            return True
+    except PermissionError:
+        print("PLAYBLASTER --- Unable to delete media file : %s" % filepath)
+        return False
 
 
 datas={}
@@ -325,6 +334,11 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
         index=self.index
         active = props.playblasts[self.index]
         fp = return_filepath(active)
+
+        # Delete previous
+        if active.rendered_filepath:
+            delete_file(active.rendered_filepath)
+            active.rendered_filepath=""
 
         # Render settings
         datas = store_parameters(scn, context)

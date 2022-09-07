@@ -2,7 +2,7 @@ import bpy
 import random
 import os
 
-from .render_operator import return_filepath
+from .render_operator import return_filepath, delete_file
 
 def generate_random():
     return(str(random.randrange(0,99999)).zfill(5))
@@ -14,15 +14,6 @@ def get_files_by_pattern(pattern, folder):
             file_list.append(os.path.join(folder, f))
     return file_list
 
-def delete_file(filepath):
-    try:
-        if os.path.isfile(filepath) :
-            os.remove(filepath)
-            print("PLAYBLASTER --- Removed : %s" % filepath)
-            return True
-    except PermissionError:
-        print("PLAYBLASTER --- Unable to delete media file : %s" % filepath)
-        return False
 
 class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
     bl_idname = "playblaster.manage_actions"
