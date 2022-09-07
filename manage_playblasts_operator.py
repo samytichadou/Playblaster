@@ -19,7 +19,7 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
         ('ADD', 'Add', ""),
         ('REMOVE', 'Remove', ""),
         ))
-    remove_files: bpy.props.BoolProperty(name="Remove associated playblasts")
+    remove_files: bpy.props.BoolProperty(name="Remove associated playblasts", default=True)
 
     @classmethod
     def poll(cls, context):
