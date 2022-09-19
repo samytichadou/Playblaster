@@ -217,6 +217,7 @@ def set_render_parameters(scene, settings, filepath, context):
 
     # Render
     rd = scene.render
+    rd.resolution_percentage=settings.resolution_percentage
     rd.filepath=filepath
     rd.use_compositing=settings.use_compositing
     rd.use_simplify=settings.simplify
