@@ -2,10 +2,8 @@ import bpy
 import os
 
 
-addon_name = os.path.basename(os.path.dirname(__file__))
-
 class PlayblasterAddonPrefs(bpy.types.AddonPreferences) :
-    bl_idname = addon_name
+    bl_idname = __package__
 
     playblast_folderpath : bpy.props.StringProperty(
             name = "Playblast Path",
@@ -37,7 +35,6 @@ class PlayblasterAddonPrefs(bpy.types.AddonPreferences) :
 
     def draw(self, context) :
         layout = self.layout
-        
         layout.prop(self, "playblast_location")
         row1=layout.row()
         row2=layout.row()
@@ -51,7 +48,7 @@ class PlayblasterAddonPrefs(bpy.types.AddonPreferences) :
 
 # get addon preferences
 def get_addon_preferences():
-    addon = bpy.context.preferences.addons.get(addon_name)
+    addon = bpy.context.preferences.addons.get(__package__)
     return getattr(addon, "preferences", None)
 
 
