@@ -18,17 +18,6 @@ Created by Samy Tichadou (tonton)
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-bl_info = {
- "name": "Playblaster",
- "author": "Samy Tichadou (tonton)",
- "version": (2, 2, 2),
- "blender": (3, 0, 0),
- "location": "Search Menu",
- "description": "Quick Playblast of your Animation",
- "wiki_url": "https://github.com/samytichadou/Playblaster/wiki",
- "tracker_url": "https://github.com/samytichadou/Playblaster/issues/new",
- "category": "Animation"}
-
 
 # register
 ##################################
