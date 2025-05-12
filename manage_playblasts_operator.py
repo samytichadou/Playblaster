@@ -5,10 +5,6 @@ import os
 from . import render_operator as ro 
 
 
-def generate_random():
-    return(str(random.randrange(0,99999)).zfill(5))
-
-
 class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
     bl_idname = "playblaster.manage_actions"
     bl_label = "Manage Playblasts"
@@ -52,12 +48,7 @@ class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
 
         # Actions
         if self.action=="ADD":
-            new_playblast=playblasts.add()
-            new_playblast.name="New Playblast"
-            new_playblast.frame_range_in=scn.frame_start
-            new_playblast.frame_range_out=scn.frame_end
-            new_playblast.hash=generate_random()
-            props.playblast_index=new_playblast.index=len(playblasts)-1
+            ro.create_playblast()
 
         elif self.action=="REMOVE":
             if props.playblast_index<=len(playblasts)-1:

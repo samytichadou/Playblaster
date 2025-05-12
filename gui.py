@@ -6,18 +6,13 @@ def view_header_gui(self, context):
     props = context.scene.playblaster_properties
     playblasts = props.playblasts
     row=self.layout.row(align=True)
-    if props.playblast_index in range(0, len(props.playblasts)) and len(props.playblasts)!=0:
-        index=playblasts[props.playblast_index].index
-    else:
-        index=-1
-        row.enabled=False
-    row.operator('playblaster.render_playblast', text="", icon= 'FILE_MOVIE').index=index
+    row.operator('playblaster.render_playblast', text="", icon= 'FILE_MOVIE')
     row.popover(panel="PLAYBLASTER_PT_playblasts_popover", text="")
 
 def draw_entry_playblast_viewer(container, playblast):
     row=container.row(align=True)
     row.prop(playblast, "name", text="", emboss=False)
-    row.operator("playblaster.render_playblast", text="", icon="FILE_MOVIE", emboss=False).index=playblast.index
+    row.operator("playblaster.render_playblast", text="", icon="FILE_MOVIE", emboss=False)
     sub=row.row(align=True)
     if not playblast.rendered_filepath:
         sub.enabled=False

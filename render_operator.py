@@ -3,8 +3,10 @@ import os
 import subprocess
 import platform
 import datetime
+import random
 
 from .addon_preferences import get_addon_preferences
+
 
 list_scene = (
     "frame_start",
@@ -336,29 +338,50 @@ class PLAYBLASTER_OT_render_keyed_macro(bpy.types.Macro):
     bl_label = "Render Macro"
     bl_options = {"INTERNAL"}
 
+def create_playblast():
+    scn = bpy.context.scene
+    props = scn.playblaster_properties
+
+    new_playblast=props.playblasts.add()
+    new_playblast.name="Playblast"
+    new_playblast.frame_range_in=scn.frame_start
+    new_playblast.frame_range_out=scn.frame_end
+    new_playblast.hash=generate_random()
+    props.playblast_index=new_playblast.index=len(props.playblasts)-1
+
+def generate_random():
+    return(str(random.randrange(0,99999)).zfill(5))
 
 class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
     bl_idname = "playblaster.render_playblast"
     bl_label = "Render Playblast"
     bl_options = {"INTERNAL"}
 
-    index: bpy.props.IntProperty()
+    # index: bpy.props.IntProperty()
     
     @classmethod
     def poll(cls, context):
-        return bpy.data.is_saved and len(context.scene.playblaster_properties.playblasts)!=0
+        return bpy.data.is_saved
 
     def execute(self, context):
         scn = context.scene
         props = scn.playblaster_properties
 
-        if self.index==-1 or self.index not in range(0, len(props.playblasts)):
+        # Create playblast if needed
+        if not props.playblasts:
+            create_playblast()
+            # Set index
+            props.playblast_index = 0
+
+        # Check if playblast selected
+        if props.playblast_index==-1 \
+        or props.playblast_index not in range(0, len(props.playblasts)):
             self.report({'WARNING'}, "Playblast not existing")
             return {'FINISHED'}
 
         global datas, keyed, index
-        index=self.index
-        active = props.playblasts[self.index]
+        index=props.playblast_index
+        active = props.playblasts[props.playblast_index]
 
         # Change version if needed
         if active.use_versions and not active.manual_versions:
