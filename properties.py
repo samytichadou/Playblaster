@@ -89,7 +89,13 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     simplify_subdivision: bpy.props.IntProperty(name = "Max Subdivision", default = 0, min = 0, max = 6)
     simplify_particles: bpy.props.FloatProperty(name = "Max Child Particles", default = 0, min = 0, max = 1)
 
-    show_overlays: bpy.props.BoolProperty(name = "Show Overlays")
+    show_overlays: bpy.props.BoolProperty(
+        name = "Show Overlays",
+    )
+    show_camera_background_images: bpy.props.BoolProperty(
+        name = "Show Camera Background Images",
+        default = True,
+    )
 
     # Output
     resolution_percentage: bpy.props.IntProperty(name = "Resolution Percentage", default = 50, min = 1, max = 100)

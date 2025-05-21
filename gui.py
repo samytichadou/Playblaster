@@ -153,6 +153,7 @@ class PLAYBLASTER_PT_playblast_render_settings_sub(bpy.types.Panel):
         col.prop(active, "eevee_ambient_occlusion")
         col.separator()
         col.prop(active, "show_overlays")
+        col.prop(active, "show_camera_background_images")
         col.prop(active, "use_3dviewport")
         col.separator()
         col.prop(active, "simplify")

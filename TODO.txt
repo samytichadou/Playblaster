@@ -3,6 +3,7 @@
 [X] incremental playblast
 [X] add UI file settings subpanel
 [ ] remove hash system
+[ ] reimplement blender player option
 [ ] handler startup pour vérif fichiers
 [ ] refresh fichiers operators
 [ ] save as json

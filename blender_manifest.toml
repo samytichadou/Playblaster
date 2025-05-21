@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "playblaster"
-version = "3.1.0"
+version = "3.1.1"
 name = "Playblaster"
 tagline = "Quick animation playblast"
 maintainer = "tonton <samytichadou@gmail.com>"

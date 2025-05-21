@@ -78,11 +78,41 @@ list_region3d = (
 )
 
 list_overlay = (
+    # Custom overlays
     "show_overlays",
+    "show_ortho_grid",
+    "show_floor",
+    "show_axis_x",
+    "show_axis_y",
+    "show_axis_z",
+    "show_text",
+    "show_cursor",
+    "show_stats",
+    "show_annotation",
+    "show_extras",
+    "show_bones",
+    "show_light_colors",
+    "show_motion_paths",
+    "show_relationship_lines",
+    "show_object_origins",
+    "show_outline_selected",
+    "show_object_origins_all",
+    "show_wireframes",
+    "show_face_orientation",
+    "show_viewer_attribute",
+    "show_viewer_text",
 )
 
 list_preferences_view = (
     "render_display_type",
+)
+
+list_context_view = (
+    "show_reconstruction",
+)
+
+list_scene_camera = (
+    "show_background_images",
 )
 
 def store_parameters(scene, context):
@@ -128,6 +158,16 @@ def store_parameters(scene, context):
     for p in list_preferences_view:
         datas[p] = getattr(pref_view, p)
 
+    # Context view
+    view=context.area.spaces[0]
+    for p in list_context_view:
+        datas[p] = getattr(view, p)
+
+    # Scene camera
+    cam=context.scene.camera.data
+    for p in list_scene_camera:
+        datas[p] = getattr(cam, p)
+
     return datas
 
 def restore_parameters(datas, scene, context):
@@ -170,6 +210,16 @@ def restore_parameters(datas, scene, context):
     pref_view=context.preferences.view
     for p in list_preferences_view:
         setattr(pref_view, p, datas[p])
+
+    # Context view
+    view=context.area.spaces[0]
+    for p in list_context_view:
+        setattr(view, p, datas[p])
+
+    # Scene camera
+    cam=context.scene.camera.data
+    for p in list_scene_camera:
+        setattr(cam, p, datas[p])
 
 def get_timestamp():
     x = datetime.datetime.now()
@@ -238,7 +288,22 @@ def set_render_parameters(scene, settings, filepath, context):
         space_3d.region_3d.view_perspective="CAMERA"
 
     # Overlay
-    space_3d.overlay.show_overlays=settings.show_overlays
+    if not settings.show_overlays:
+
+        # Custom overlays to keep cam images
+        if settings.show_camera_background_images:
+            for p in list_overlay:
+                setattr(space_3d.overlay, p, False)
+
+            space_3d.overlay.show_overlays=True
+            space_3d.show_reconstruction = False
+
+        else:
+            space_3d.overlay.show_overlays=False
+
+    # Background images
+    if not settings.show_camera_background_images:
+        scene.camera.data.show_background_images = False
 
     # Render
     rd = scene.render
