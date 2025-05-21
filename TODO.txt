@@ -2,6 +2,7 @@
 [X] version playblast (optional)
 [X] incremental playblast
 [X] add UI file settings subpanel
+[ ] remove hash system
 [ ] handler startup pour vérif fichiers
 [ ] refresh fichiers operators
 [ ] save as json
