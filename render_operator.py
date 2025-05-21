@@ -180,20 +180,43 @@ def return_filepath(playblast):
     prefs=get_addon_preferences()
     blend_fp=bpy.data.filepath
     blend_name=os.path.splitext(os.path.basename(blend_fp))[0]
+
+    # Build name
     file_name=""
+
     if playblast.include_timestamp:
-        file_name+="%s_" % get_timestamp()
-    file_name+="%s_%s_%s_" % (blend_name, playblast.name, playblast.hash)
+        file_name+=f"{get_timestamp()}_"
+
+    file_name+=f"{blend_name}"
+
+    if playblast.playblast_name:
+        file_name+=f"_{playblast.name}"
+
     if playblast.use_versions:
-        file_name+="v%s_" % str(playblast.version).zfill(3)
+        file_name+="_v%s" % str(playblast.version).zfill(3)
+
+    if playblast.frame_numbers:
+        file_name+="_"
+
     if prefs.playblast_location=="ALONGSIDE":
         tmp = os.path.join(os.path.dirname(blend_fp), prefs.playblast_folder_name)
-        fp_dir = os.path.join(tmp, blend_name)
-        fp = os.path.join(fp_dir, file_name)
+
+        folderpath = tmp
+        if playblast.playblast_file_folder:
+            folderpath = os.path.join(tmp, blend_name)
+        fp = os.path.join(folderpath, file_name)
+
     else:
-        fp_dir = os.path.join(prefs.playblast_folderpath, "playblasts")
-        fp = os.path.join(fp_dir, file_name)
-    os.makedirs(fp_dir, exist_ok=True)
+
+        folderpath = prefs.playblast_folderpath
+        if playblast.playblast_file_folder:
+            folderpath = os.path.join(prefs.playblast_folderpath, "playblasts")
+        fp = os.path.join(folderpath, file_name)
+
+    os.makedirs(folderpath, exist_ok=True)
+
+    playblast.rendered_filepath = fp
+
     return fp
 
 def set_render_parameters(scene, settings, filepath, context):
@@ -267,6 +290,14 @@ def set_render_parameters(scene, settings, filepath, context):
     context.preferences.view.render_display_type="NONE"
 
 def play_video_external(video_filepath):
+    if platform.system() == 'Darwin':       # macOS
+        subprocess.call(('open', video_filepath))
+    elif platform.system() == 'Windows':    # Windows
+        os.startfile(video_filepath)
+    else:                                   # linux variants
+        subprocess.call(('xdg-open', video_filepath))
+
+def play_video_internal(video_filepath):
     if platform.system() == 'Darwin':       # macOS
         subprocess.call(('open', video_filepath))
     elif platform.system() == 'Windows':    # Windows
@@ -430,14 +461,34 @@ class PLAYBLASTER_OT_render_playblast_postactions(bpy.types.Operator):
         props.is_rendering=False
 
         active = props.playblasts[index]
-        active.rendered_filepath=scn.render.frame_path()
+        rnd_path = scn.render.frame_path()
+
+        # Rename file
+        if not active.frame_numbers:
+            ext = os.path.splitext(rnd_path)[1]
+            new = f"{active.rendered_filepath}{ext}"
+
+            if os.path.isfile(new):
+                if not delete_file(new):
+                    shutil.copy2(rnd_path, new)
+                    delete_file(rnd_path)
+                else:
+                    os.rename(rnd_path, new)
+            else:
+                os.rename(rnd_path, new)
+
+            active.rendered_filepath=new
+        else:
+            active.rendered_filepath=rnd_path
+
         # End Action
         if not props.is_cancelling:
             if active.end_action=="PLAY":
                 if active.player=="DEFAULT":
-                    play_video_external(scn.render.frame_path())
+                    play_video_external(active.rendered_filepath)
                 elif active.player=="BLENDER":
-                    bpy.ops.render.play_rendered_anim()
+                    # bpy.ops.render.play_rendered_anim()
+                    play_video_internal(active.rendered_filepath)
 
         # Restore parameters
         restore_parameters(datas, scn, context)

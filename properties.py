@@ -1,7 +1,60 @@
 import bpy
+import re
+
+def increment_name(name):
+
+    m = re.search(r'\d+$', name)
+    # if the string ends in digits m will be a Match object, or None otherwise.
+    if m is not None:
+        nb = m.group()
+        pattern = name.split(nb)[0]
+        newnb = str(int(nb)+1).zfill(len(nb))
+        return f"{pattern}{newnb}"
+    else:
+        return f"{name}_001"
+
+    return name
+
+def get_unique_name(name):
+
+    props = bpy.context.scene.playblaster_properties
+
+    name_list = []
+    for p in props.playblasts:
+        name_list.append(p.name)
+
+    # Remove name first occurence
+    name_list.remove(name)
+
+    while True:
+        if name not in name_list:
+            break
+
+        name = increment_name(name)
+
+    return name
+
+def update_name_callback(self, context):
+
+    props = bpy.context.scene.playblaster_properties
+
+    if props.no_update:
+        return
+
+    props.no_update = True
+
+    old_name = self.name
+    self.name = get_unique_name(old_name)
+
+    props.no_update = False
+
 
 
 class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
+    name: bpy.props.StringProperty(
+        name = "Playblast Name",
+        update=update_name_callback,
+    )
     # Render
     render_type: bpy.props.EnumProperty(
         name = "Render Type",
@@ -13,7 +66,7 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     )
     shading: bpy.props.EnumProperty(
         name = "Shading Type",
-        default = 'MATERIAL',
+        default = 'SOLID',
         items = (
         ('WIREFRAME', "Wireframe", ""),
         ('SOLID', "Solid", ""),
@@ -94,7 +147,7 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     stamp_font_size: bpy.props.IntProperty(name = "Font Size", default=12, min=8, max=64, subtype='PIXEL')
     use_stamp_labels: bpy.props.BoolProperty(name = "Include Labels", default = True)
 
-    use_stamp: bpy.props.BoolProperty(name = "Metadata", default = False)
+    use_stamp: bpy.props.BoolProperty(name = "Metadata", default = True)
     use_stamp_date: bpy.props.BoolProperty(name = "Date", default = True)
     use_stamp_time: bpy.props.BoolProperty(name = "Timecode", default = True)
     use_stamp_render_time: bpy.props.BoolProperty(name = "Render Time", default = False)
@@ -102,13 +155,26 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     use_stamp_frame_range: bpy.props.BoolProperty(name = "Frame Range", default = False)
     use_stamp_memory: bpy.props.BoolProperty(name = "Memory", default = False)
     use_stamp_hostname: bpy.props.BoolProperty(name = "Hostname", default = False)
-    use_stamp_camera: bpy.props.BoolProperty(name = "Camera", default = False)
-    use_stamp_lens: bpy.props.BoolProperty(name = "Lens", default = False)
+    use_stamp_camera: bpy.props.BoolProperty(name = "Camera", default = True)
+    use_stamp_lens: bpy.props.BoolProperty(name = "Lens", default = True)
     use_stamp_scene: bpy.props.BoolProperty(name = "Scene", default = False)
     use_stamp_marker: bpy.props.BoolProperty(name = "Marker", default = False)
     use_stamp_filename: bpy.props.BoolProperty(name = "Filename", default = True)
     use_stamp_note: bpy.props.BoolProperty(name = "Note", default = False)
     stamp_note_text: bpy.props.StringProperty(name = "Note", default = "Note")
+
+    playblast_name: bpy.props.BoolProperty(
+        name = "Use Playblast Name",
+        description = "Use playblast entry name in file name",
+    )
+    playblast_file_folder : bpy.props.BoolProperty(
+        name = "Separate Folder by File",
+        description = "Create a folder per blend file inside playblast folder",
+    )
+    frame_numbers : bpy.props.BoolProperty(
+        name = "Include Frame Numbers",
+        description = "Include frame numbers in playblast name",
+    )
 
 
 class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):
@@ -117,6 +183,8 @@ class PLAYBLASTER_PR_playblaster_properties(bpy.types.PropertyGroup):
     
     is_rendering: bpy.props.BoolProperty()
     is_cancelling: bpy.props.BoolProperty()
+    no_update: bpy.props.BoolProperty()
+
 
 ### REGISTER ---
 def register():

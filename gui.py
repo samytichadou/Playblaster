@@ -100,6 +100,13 @@ class PLAYBLASTER_PT_playblast_file_settings_sub(bpy.types.Panel):
 
         layout = self.layout
 
+        col = layout.column(align=True)
+        col.prop(active, "playblast_file_folder")
+        col.prop(active, "playblast_name")
+        col.prop(active, "frame_numbers")
+
+        layout.separator()
+
         col=layout.column(align=True)
         col.prop(active, "include_timestamp")
         row=col.row()
@@ -112,7 +119,7 @@ class PLAYBLASTER_PT_playblast_file_settings_sub(bpy.types.Panel):
         sub.prop(active, "version", text="")
         col.separator()
         col.prop(active, "end_action", text="End")
-        col.prop(active, "player")
+        # col.prop(active, "player")
 
 class PLAYBLASTER_PT_playblast_render_settings_sub(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'

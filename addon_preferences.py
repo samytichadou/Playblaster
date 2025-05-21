@@ -36,12 +36,15 @@ class PlayblasterAddonPrefs(bpy.types.AddonPreferences) :
     def draw(self, context) :
         layout = self.layout
         layout.prop(self, "playblast_location")
+
         row1=layout.row()
         row2=layout.row()
+
         if self.playblast_location=="PREFS":
             row2.enabled=False
         else:
             row1.enabled=False
+
         row1.prop(self, "playblast_folderpath")
         row2.prop(self, "playblast_folder_name")
 

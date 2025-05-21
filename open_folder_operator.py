@@ -26,8 +26,7 @@ def return_folderpath():
     blend_fp=bpy.data.filepath
     blend_name=os.path.splitext(os.path.basename(blend_fp))[0]
     if prefs.playblast_location=="ALONGSIDE":
-        tmp = os.path.join(os.path.dirname(blend_fp), prefs.playblast_folder_name)
-        return os.path.join(tmp, blend_name)
+        return os.path.join(os.path.dirname(blend_fp), prefs.playblast_folder_name)
     else:
         return os.path.join(prefs.playblast_folderpath, "playblasts")
 

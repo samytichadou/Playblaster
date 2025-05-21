@@ -1,8 +1,9 @@
 import bpy
 import random
 import os
+import re
 
-from . import render_operator as ro 
+from . import render_operator as ro
 
 
 class PLAYBLASTER_OT_manage_actions(bpy.types.Operator):
