@@ -336,16 +336,21 @@ def set_render_parameters(scene, settings, filepath, context):
 
     # Python datapath
     if settings.use_python_datapath:
-        if not rd.use_stamp_note:
-            rd.use_stamp_note = True
-            rd.stamp_note_text = ""
-        else:
-            rd.stamp_note_text += "   -   "
-
         # Trigger update
         settings.python_datapath = settings.python_datapath
-        # Burn in note
-        rd.stamp_note_text += settings.python_datapath_result
+
+        if settings.python_datapath_result:
+            if not rd.use_stamp_note:
+                rd.use_stamp_note = True
+                rd.stamp_note_text = ""
+            else:
+                rd.stamp_note_text += "   -   "
+
+            # Burn in note
+            rd.stamp_note_text += settings.python_datapath_result
+
+        else:
+            print("PLAYBLASTER --- Invalid python datapath result, avoiding")
 
     # Image settings
     img_settings=rd.image_settings

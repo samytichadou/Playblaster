@@ -71,6 +71,8 @@ def get_datapath(datapath):
                 splitted = s.split(rep)
                 if exp.startswith("'") or exp.startswith('"'):
                     exp = exp.replace("'", "").replace('"', "")
+                if exp.isdigit():
+                    exp = int(exp)
                 object = getattr(object, splitted[0])[exp]
                 chk_bracket = True
 

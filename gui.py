@@ -248,15 +248,15 @@ class PLAYBLASTER_PT_playblast_metadata_settings_sub(bpy.types.Panel):
         box = col.box()
         scol = box.column(align=True)
         row = scol.row(align=True)
-        row.prop(active, "use_python_datapath", text="")
-        subrow = row.row(align=True)
-        subrow2 = scol.row(align=True)
-        subrow.enabled = subrow2.enabled = active.use_python_datapath
-        subrow.prop(active, "python_datapath", text="")
+        row.prop(active, "use_python_datapath")
+        scol.separator()
+        subcol = scol.column(align=False)
+        subcol.enabled = active.use_python_datapath
+        subcol.prop(active, "python_datapath", text="")
         if not active.python_datapath_result:
-            subrow2.label(text="Invalid python datapath", icon="INFO")
+            subcol.label(text="Invalid python datapath", icon="INFO")
         else:
-            subrow2.label(text=active.python_datapath_result, icon="SCRIPT")
+            subcol.label(text=active.python_datapath_result, icon="SCRIPT")
 
 
 class PLAYBLASTER_PT_playblast_infos_sub(bpy.types.Panel):
