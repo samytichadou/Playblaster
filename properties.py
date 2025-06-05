@@ -226,6 +226,7 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     use_python_datapath: bpy.props.BoolProperty(
         name = "Python Datapath",
         default = False,
+        update = update_python_datapath_callback,
     )
     python_datapath: bpy.props.StringProperty(
         name = "Python Datapath",
