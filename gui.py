@@ -223,25 +223,41 @@ class PLAYBLASTER_PT_playblast_metadata_settings_sub(bpy.types.Panel):
         col.prop(active, "stamp_font_size", text="Font Size")
         col.prop(active, "use_stamp_labels", text="Include Labels")
         
-        box=layout.box()
-        col=box.column(align=True)
-        col.prop(active, "use_stamp_date")
-        col.prop(active, "use_stamp_time")
-        col.prop(active, "use_stamp_render_time")
-        col.prop(active, "use_stamp_frame")
-        col.prop(active, "use_stamp_frame_range")
-        col.prop(active, "use_stamp_memory")
-        col.prop(active, "use_stamp_hostname")
-        col.prop(active, "use_stamp_camera")
-        col.prop(active, "use_stamp_lens")
-        col.prop(active, "use_stamp_scene")
-        col.prop(active, "use_stamp_marker")
-        col.prop(active, "use_stamp_filename")
-        row=col.row(align=True)
+        col.separator()
+        box=col.box()
+        scol=box.column(align=True)
+        scol.prop(active, "use_stamp_date")
+        scol.prop(active, "use_stamp_time")
+        scol.prop(active, "use_stamp_render_time")
+        scol.prop(active, "use_stamp_frame")
+        scol.prop(active, "use_stamp_frame_range")
+        scol.prop(active, "use_stamp_memory")
+        scol.prop(active, "use_stamp_hostname")
+        scol.prop(active, "use_stamp_camera")
+        scol.prop(active, "use_stamp_lens")
+        scol.prop(active, "use_stamp_scene")
+        scol.prop(active, "use_stamp_marker")
+        scol.prop(active, "use_stamp_filename")
+
+        row=scol.row(align=True)
         row.prop(active, "use_stamp_note", text="")
         sub=row.row(align=True)
         sub.enabled = active.use_stamp_note
         sub.prop(active, "stamp_note_text", text="")
+
+        box = col.box()
+        scol = box.column(align=True)
+        row = scol.row(align=True)
+        row.prop(active, "use_python_datapath", text="")
+        subrow = row.row(align=True)
+        subrow2 = scol.row(align=True)
+        subrow.enabled = subrow2.enabled = active.use_python_datapath
+        subrow.prop(active, "python_datapath", text="")
+        if not active.python_datapath_result:
+            subrow2.label(text="Invalid python datapath", icon="INFO")
+        else:
+            subrow2.label(text=active.python_datapath_result, icon="SCRIPT")
+
 
 class PLAYBLASTER_PT_playblast_infos_sub(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'

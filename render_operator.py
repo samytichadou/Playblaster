@@ -316,23 +316,36 @@ def set_render_parameters(scene, settings, filepath, context):
     rd.simplify_child_particles_render=settings.simplify_particles
     rd.use_sequencer=False
     # Metadata
-    rd.stamp_font_size=         settings.stamp_font_size
-    rd.use_stamp_labels=        settings.use_stamp_labels
-    rd.use_stamp=               settings.use_stamp
-    rd.use_stamp_date=          settings.use_stamp_date
-    rd.use_stamp_time=          settings.use_stamp_time
-    rd.use_stamp_render_time=   settings.use_stamp_render_time
-    rd.use_stamp_frame=         settings.use_stamp_frame
-    rd.use_stamp_frame_range=   settings.use_stamp_frame_range
-    rd.use_stamp_memory=        settings.use_stamp_memory
-    rd.use_stamp_hostname=      settings.use_stamp_hostname
-    rd.use_stamp_camera=        settings.use_stamp_camera
-    rd.use_stamp_lens=          settings.use_stamp_lens
-    rd.use_stamp_scene=         settings.use_stamp_scene
-    rd.use_stamp_marker=        settings.use_stamp_marker
-    rd.use_stamp_filename=      settings.use_stamp_filename
-    rd.use_stamp_note=          settings.use_stamp_note
-    rd.stamp_note_text=         settings.stamp_note_text
+    rd.stamp_font_size          = settings.stamp_font_size
+    rd.use_stamp_labels         = settings.use_stamp_labels
+    rd.use_stamp                = settings.use_stamp
+    rd.use_stamp_date           = settings.use_stamp_date
+    rd.use_stamp_time           = settings.use_stamp_time
+    rd.use_stamp_render_time    = settings.use_stamp_render_time
+    rd.use_stamp_frame          = settings.use_stamp_frame
+    rd.use_stamp_frame_range    = settings.use_stamp_frame_range
+    rd.use_stamp_memory         = settings.use_stamp_memory
+    rd.use_stamp_hostname       = settings.use_stamp_hostname
+    rd.use_stamp_camera         = settings.use_stamp_camera
+    rd.use_stamp_lens           = settings.use_stamp_lens
+    rd.use_stamp_scene          = settings.use_stamp_scene
+    rd.use_stamp_marker         = settings.use_stamp_marker
+    rd.use_stamp_filename       = settings.use_stamp_filename
+    rd.use_stamp_note           = settings.use_stamp_note
+    rd.stamp_note_text          = settings.stamp_note_text
+
+    # Python datapath
+    if settings.use_python_datapath:
+        if not rd.use_stamp_note:
+            rd.use_stamp_note = True
+            rd.stamp_note_text = ""
+        else:
+            rd.stamp_note_text += "   -   "
+
+        # Trigger update
+        settings.python_datapath = settings.python_datapath
+        # Burn in note
+        rd.stamp_note_text += settings.python_datapath_result
 
     # Image settings
     img_settings=rd.image_settings

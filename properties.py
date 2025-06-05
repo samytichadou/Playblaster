@@ -1,6 +1,7 @@
 import bpy
 import re
 
+from . import python_datapath as datap
 def increment_name(name):
 
     m = re.search(r'\d+$', name)
@@ -48,6 +49,15 @@ def update_name_callback(self, context):
 
     props.no_update = False
 
+def update_python_datapath_callback(self, context):
+    try:
+        self.python_datapath_result = datap.get_datapath(
+            self.python_datapath,
+        )
+
+    except Exception as e:
+        self.python_datapath_result = ""
+        print(f"PLAYBLASTER --- Invalid python datapath : {e}")
 
 
 class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
@@ -153,22 +163,80 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     stamp_font_size: bpy.props.IntProperty(name = "Font Size", default=12, min=8, max=64, subtype='PIXEL')
     use_stamp_labels: bpy.props.BoolProperty(name = "Include Labels", default = True)
 
-    use_stamp: bpy.props.BoolProperty(name = "Metadata", default = True)
-    use_stamp_date: bpy.props.BoolProperty(name = "Date", default = True)
-    use_stamp_time: bpy.props.BoolProperty(name = "Timecode", default = True)
-    use_stamp_render_time: bpy.props.BoolProperty(name = "Render Time", default = False)
-    use_stamp_frame: bpy.props.BoolProperty(name = "Frame", default = True)
-    use_stamp_frame_range: bpy.props.BoolProperty(name = "Frame Range", default = False)
-    use_stamp_memory: bpy.props.BoolProperty(name = "Memory", default = False)
-    use_stamp_hostname: bpy.props.BoolProperty(name = "Hostname", default = False)
-    use_stamp_camera: bpy.props.BoolProperty(name = "Camera", default = True)
-    use_stamp_lens: bpy.props.BoolProperty(name = "Lens", default = True)
-    use_stamp_scene: bpy.props.BoolProperty(name = "Scene", default = False)
-    use_stamp_marker: bpy.props.BoolProperty(name = "Marker", default = False)
-    use_stamp_filename: bpy.props.BoolProperty(name = "Filename", default = True)
-    use_stamp_note: bpy.props.BoolProperty(name = "Note", default = False)
-    stamp_note_text: bpy.props.StringProperty(name = "Note", default = "Note")
+    use_stamp: bpy.props.BoolProperty(
+        name = "Metadata",
+        default = True,
+        )
+    use_stamp_date: bpy.props.BoolProperty(
+        name = "Date",
+        default = True,
+    )
+    use_stamp_time: bpy.props.BoolProperty(
+        name = "Timecode",
+        default = True,
+    )
+    use_stamp_render_time: bpy.props.BoolProperty(
+        name = "Render Time",
+        default = False,
+    )
+    use_stamp_frame: bpy.props.BoolProperty(
+        name = "Frame",
+        default = True,
+    )
+    use_stamp_frame_range: bpy.props.BoolProperty(
+        name = "Frame Range",
+        default = False,
+    )
+    use_stamp_memory: bpy.props.BoolProperty(
+        name = "Memory",
+        default = False,
+    )
+    use_stamp_hostname: bpy.props.BoolProperty(
+        name = "Hostname",
+        default = False,
+    )
+    use_stamp_camera: bpy.props.BoolProperty(
+        name = "Camera",
+        default = True,
+    )
+    use_stamp_lens: bpy.props.BoolProperty(
+        name = "Lens",
+        default = True,
+    )
+    use_stamp_scene: bpy.props.BoolProperty(
+        name = "Scene",
+        default = False,
+    )
+    use_stamp_marker: bpy.props.BoolProperty(
+        name = "Marker",
+        default = False,
+    )
+    use_stamp_filename: bpy.props.BoolProperty(
+        name = "Filename",
+        default = True,
+    )
+    use_stamp_note: bpy.props.BoolProperty(
+        name = "Note",
+        default = False,
+    )
+    stamp_note_text: bpy.props.StringProperty(
+        name = "Note",
+        default = "Note",
+    )
+    use_python_datapath: bpy.props.BoolProperty(
+        name = "Python Datapath",
+        default = False,
+    )
+    python_datapath: bpy.props.StringProperty(
+        name = "Python Datapath",
+        default = "Python Datapath",
+        update = update_python_datapath_callback,
+    )
+    python_datapath_result: bpy.props.StringProperty(
+        name = "Python Datapath Result",
+    )
 
+    # Playblast properties
     playblast_name: bpy.props.BoolProperty(
         name = "Use Playblast Name",
         description = "Use playblast entry name in file name",
