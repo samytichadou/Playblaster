@@ -186,6 +186,7 @@ def restore_parameters(datas, scene, context):
     # FFMPEG
     ffmpeg=rd.ffmpeg
     for p in list_ffmpeg:
+        # Deal with ffmpeg properties bug (enum not init)
         try:
             setattr(ffmpeg, p, datas[p])
         except TypeError:
