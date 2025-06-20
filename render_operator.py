@@ -186,7 +186,10 @@ def restore_parameters(datas, scene, context):
     # FFMPEG
     ffmpeg=rd.ffmpeg
     for p in list_ffmpeg:
-        setattr(ffmpeg, p, datas[p])
+        try:
+            setattr(ffmpeg, p, datas[p])
+        except TypeError:
+            print(f"PLAYBLASTER --- Unable to restore ffmpeg {p} property")
     # EEVEE
     eevee=scene.eevee
     for p in list_eevee:
