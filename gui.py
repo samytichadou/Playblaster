@@ -12,7 +12,9 @@ def view_header_gui(self, context):
 def draw_entry_playblast_viewer(container, playblast):
     row=container.row(align=True)
     row.prop(playblast, "name", text="", emboss=False)
-    row.operator("playblaster.render_playblast", text="", icon="FILE_MOVIE", emboss=False)
+
+    row.operator("playblaster.render_playblast", text="", icon="FILE_MOVIE", emboss=False).index=playblast.index
+
     sub=row.row(align=True)
     if not playblast.rendered_filepath:
         sub.enabled=False

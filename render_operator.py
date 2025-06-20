@@ -476,13 +476,17 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
     bl_label = "Render Playblast"
     bl_options = {"INTERNAL"}
 
-    # index: bpy.props.IntProperty()
+    index: bpy.props.IntProperty(
+        default = -1,
+        options = {"SKIP_SAVE"},
+    )
     
     @classmethod
     def poll(cls, context):
         return bpy.data.is_saved
 
     def execute(self, context):
+
         scn = context.scene
         props = scn.playblaster_properties
 
@@ -491,16 +495,25 @@ class PLAYBLASTER_OT_render_playblast(bpy.types.Operator):
             create_playblast()
             # Set index
             props.playblast_index = 0
+            idx = 0
+
+        else:
+
+            if self.index != -1:
+                idx = self.index
+
+            else:
+                idx = props.playblast_index
 
         # Check if playblast selected
-        if props.playblast_index==-1 \
-        or props.playblast_index not in range(0, len(props.playblasts)):
+        if idx==-1 \
+        or idx not in range(0, len(props.playblasts)):
             self.report({'WARNING'}, "Playblast not existing")
             return {'FINISHED'}
 
         global datas, keyed, index
-        index=props.playblast_index
-        active = props.playblasts[props.playblast_index]
+        index=idx
+        active = props.playblasts[idx]
 
         # Change version if needed
         if active.use_versions and not active.manual_versions:
