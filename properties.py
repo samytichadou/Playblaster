@@ -108,7 +108,13 @@ class PLAYBLASTER_PR_playblast_settings(bpy.types.PropertyGroup):
     )
 
     # Output
-    resolution_percentage: bpy.props.IntProperty(name = "Resolution Percentage", default = 50, min = 1, max = 100)
+    resolution_percentage: bpy.props.IntProperty(
+        name = "Resolution Percentage",
+        default = 50,
+        soft_max = 100,
+        min = 1,
+        subtype='FACTOR',
+    )
     frame_range_type: bpy.props.EnumProperty(
         name = "Frame Range",
         default = 'SCENE',
